@@ -13,6 +13,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -228,6 +230,42 @@ public class Main extends Application {
             stage.setScene(scene);
             stage.setTitle("Enigma Simulator");
             stage.show();
+        });
+
+        Rectangle rect1 = new Rectangle(50, 50, 30, 30);
+        Rectangle rect2 = new Rectangle(250, 50, 30, 30);
+        Line line = new Line();
+
+        plugboardGroup.getChildren().add(rect1);
+        plugboardGroup.getChildren().add(rect2);
+        plugboardGroup.getChildren().add(line);
+
+        line.startXProperty().bind(rect1.xProperty().add(rect1.widthProperty().divide(2)));
+        line.startYProperty().bind(rect1.yProperty().add(rect1.heightProperty().divide(2)));
+        line.endXProperty().bind(rect2.xProperty().add(rect2.widthProperty().divide(2)));
+        line.endYProperty().bind(rect2.yProperty().add(rect2.heightProperty().divide(2)));
+
+        rect1.setOnMousePressed(event -> {
+            rect1.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
+        });
+        rect1.setOnMouseDragged(event -> {
+            double[] userData = (double[]) rect1.getUserData();
+            double deltaX = event.getSceneX() - userData[0];
+            double deltaY = event.getSceneY() - userData[1];
+            rect1.setX(rect1.getX() + deltaX);
+            rect1.setY(rect1.getY() + deltaY);
+            rect1.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
+        });
+        rect2.setOnMousePressed(event -> {
+            rect2.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
+        });
+        rect2.setOnMouseDragged(event -> {
+            double[] userData = (double[]) rect2.getUserData();
+            double deltaX = event.getSceneX() - userData[0];
+            double deltaY = event.getSceneY() - userData[1];
+            rect2.setX(rect2.getX() + deltaX);
+            rect2.setY(rect2.getY() + deltaY);
+            rect2.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
         });
 
 
