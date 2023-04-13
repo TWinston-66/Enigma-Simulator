@@ -1,4 +1,4 @@
-package com.mikepound.enigma;
+package com.enigma.enigma.Simulator;
 
 public class Rotor {
     protected String name;

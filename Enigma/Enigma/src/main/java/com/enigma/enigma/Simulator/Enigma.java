@@ -1,4 +1,6 @@
-package Enigma;
+package com.enigma.enigma.Simulator;
+
+import com.enigma.enigma.Simulator.*;
 
 public class Enigma {
     // 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
@@ -11,16 +13,20 @@ public class Enigma {
 
     public Plugboard plugboard;
 
+    /**
+     *
+     * @param rotors - I through VIII
+     * @param reflector - B or C
+     * @param rotorPositions - 0 to 25 (mapped to letters)
+     * @param ringSettings - Which rotors to use - 1-5
+     * @param plugboardConnections - Connected letters (ex. AH JY BE) (5 total plugs)
+     */
     public Enigma(String[] rotors, String reflector, int[] rotorPositions, int[] ringSettings, String plugboardConnections) {
         this.leftRotor = Rotor.Create(rotors[0], rotorPositions[0], ringSettings[0]);
         this.middleRotor = Rotor.Create(rotors[1], rotorPositions[1], ringSettings[1]);
         this.rightRotor = Rotor.Create(rotors[2], rotorPositions[2], ringSettings[2]);
         this.reflector = Reflector.Create(reflector);
         this.plugboard = new Plugboard(plugboardConnections);
-    }
-
-    public Enigma(EnigmaKey key) {
-        this(key.rotors, "B", key.indicators, key.rings, key.plugboard);
     }
 
     public void rotate() {
@@ -41,7 +47,7 @@ public class Enigma {
     public int encrypt(int c) {
         rotate();
 
-        // Enigma.Plugboard in
+        // Plugboard in
         c = this.plugboard.forward(c);
 
         // Right to left
@@ -49,7 +55,7 @@ public class Enigma {
         int c2 = middleRotor.forward(c1);
         int c3 = leftRotor.forward(c2);
 
-        // Enigma.Reflector
+        // Reflector
         int c4 = reflector.forward(c3);
 
         // Left to right
@@ -57,7 +63,7 @@ public class Enigma {
         int c6 = middleRotor.backward(c5);
         int c7 = rightRotor.backward(c6);
 
-        // Enigma.Plugboard out
+        // Plugboard out
         c7 = plugboard.forward(c7);
 
         return c7;

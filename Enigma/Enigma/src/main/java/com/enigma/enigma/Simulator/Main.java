@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main extends Application {
     String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
@@ -25,6 +26,9 @@ public class Main extends Application {
     // Glow-board Parameters
     double keyPadding = 50;
     double keyRadius = 25;
+
+    Enigma enigma = new Enigma(new String[] {"VII", "V", "IV"}, "B", new int[] {10,5,12}, new int[] {1,2,3}, "AD FT WH JO PN");
+
 
 
     @Override
@@ -82,19 +86,34 @@ public class Main extends Application {
         Scene scene = new Scene(group, width, height, Color.DARKSLATEGRAY);
         scene.setFill(Color.GRAY);
 
+
+        final boolean[] isExecuted = {false};
+
+        AtomicInteger pressedIndex = new AtomicInteger();
+
         scene.setOnKeyPressed(event -> {
-            String key = event.getText();
-            int letterIndex = letterOrder.indexOf(key.toUpperCase());
-            if (letterIndex != -1) {
-                circles[letterIndex].setFill(Color.YELLOW);
+            // check if the flag is false
+            if (!isExecuted[0]) {
+                // set the flag to true
+                isExecuted[0] = true;
+
+                String key = event.getText();
+                int letterIndex = letterOrder.indexOf(key.toUpperCase());
+                if (letterIndex != -1) {
+                    char newLetter = enigma.encrypt(letters[letterIndex]);
+                    letterIndex = letterOrder.indexOf(String.valueOf(newLetter).toUpperCase());
+                    pressedIndex.set(letterIndex);
+                    circles[letterIndex].setFill(Color.YELLOW);
+                }
             }
         });
 
         scene.setOnKeyReleased(event -> {
-            String key = event.getText();
-            int letterIndex = letterOrder.indexOf(key.toUpperCase());
-            if (letterIndex != -1) {
-                circles[letterIndex].setFill(Color.LIGHTSLATEGRAY);
+            //String key = event.getText();
+            //int letterIndex = letterOrder.indexOf(key.toUpperCase());
+            if (pressedIndex.get() != -1) {
+                circles[pressedIndex.get()].setFill(Color.LIGHTSLATEGRAY);
+                isExecuted[0] = false;
             }
         });
 
