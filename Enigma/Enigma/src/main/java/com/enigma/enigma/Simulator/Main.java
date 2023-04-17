@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -19,6 +20,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main extends Application {
@@ -128,6 +132,8 @@ public class Main extends Application {
         rotor2.setValue("II");
         rotor3.setValue("III");
 
+
+
         group.getChildren().add(rotor1);
         group.getChildren().add(rotor2);
         group.getChildren().add(rotor3);
@@ -168,8 +174,13 @@ public class Main extends Application {
 
 
         rotor1.setOnAction(event -> {
-            String selectedValue = rotor1.getValue();
-            System.out.println("Rotor 1 value: " + selectedValue);
+            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
+        });
+        rotor2.setOnAction(event -> {
+            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
+        });
+        rotor3.setOnAction(event -> {
+            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
         });
 
         Scene scene = new Scene(group, width, height, Color.DARKSLATEGRAY);
@@ -232,41 +243,28 @@ public class Main extends Application {
             stage.show();
         });
 
-        Rectangle rect1 = new Rectangle(50, 50, 30, 30);
-        Rectangle rect2 = new Rectangle(250, 50, 30, 30);
+        double rectangleSize = 50;
+        double plugRadius = rectangleSize / 2;
+        Rectangle rect1 = new Rectangle(50, 50, rectangleSize, rectangleSize);
+        Rectangle rect2 = new Rectangle(250, 50, rectangleSize, rectangleSize);
+        Circle circle1 = new Circle(150, 150, plugRadius);
+        Circle circle2 = new Circle(350, 150, plugRadius);
         Line line = new Line();
 
-        plugboardGroup.getChildren().add(rect1);
-        plugboardGroup.getChildren().add(rect2);
-        plugboardGroup.getChildren().add(line);
+        plugboardGroup.getChildren().addAll(rect1, rect2, circle1, circle2, line);
 
         line.startXProperty().bind(rect1.xProperty().add(rect1.widthProperty().divide(2)));
         line.startYProperty().bind(rect1.yProperty().add(rect1.heightProperty().divide(2)));
         line.endXProperty().bind(rect2.xProperty().add(rect2.widthProperty().divide(2)));
         line.endYProperty().bind(rect2.yProperty().add(rect2.heightProperty().divide(2)));
 
-        rect1.setOnMousePressed(event -> {
-            rect1.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
-        });
-        rect1.setOnMouseDragged(event -> {
-            double[] userData = (double[]) rect1.getUserData();
-            double deltaX = event.getSceneX() - userData[0];
-            double deltaY = event.getSceneY() - userData[1];
-            rect1.setX(rect1.getX() + deltaX);
-            rect1.setY(rect1.getY() + deltaY);
-            rect1.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
-        });
-        rect2.setOnMousePressed(event -> {
-            rect2.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
-        });
-        rect2.setOnMouseDragged(event -> {
-            double[] userData = (double[]) rect2.getUserData();
-            double deltaX = event.getSceneX() - userData[0];
-            double deltaY = event.getSceneY() - userData[1];
-            rect2.setX(rect2.getX() + deltaX);
-            rect2.setY(rect2.getY() + deltaY);
-            rect2.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
-        });
+// create a list of all the circles for snapping
+        List<Circle> plugs = new ArrayList<>();
+        plugs.add(circle1);
+        plugs.add(circle2);
+
+        addDraggable(rect1, plugs);
+        addDraggable(rect2, plugs);
 
 
         // Create the scene and set it on the primary stage
@@ -278,4 +276,61 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch();
     }
+
+    // create a method to make a rectangle draggable and snap it to the closest circle
+    private void addDraggable(Rectangle rect, List<Circle> circles) {
+        rect.setOnMousePressed(event -> {
+            rect.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
+            unsnapFromCircles(rect, circles);
+        });
+        rect.setOnMouseDragged(event -> {
+            double[] userData = (double[]) rect.getUserData();
+            double deltaX = event.getSceneX() - userData[0];
+            double deltaY = event.getSceneY() - userData[1];
+            rect.setX(rect.getX() + deltaX);
+            rect.setY(rect.getY() + deltaY);
+            rect.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
+            snapToCircles(rect, circles);
+        });
+    }
+
+    private void snapToCircles(Rectangle rect, List<Circle> circles) {
+        double rectCenterX = rect.getX() + rect.getWidth() / 2;
+        double rectCenterY = rect.getY() + rect.getHeight() / 2;
+
+        Circle closestCircle = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (Circle circle : circles) {
+            double circleCenterX = circle.getCenterX();
+            double circleCenterY = circle.getCenterY();
+            double distance = Math.sqrt(Math.pow(rectCenterX - circleCenterX, 2) + Math.pow(rectCenterY - circleCenterY, 2));
+
+            if (distance < circle.getRadius() && distance < minDistance) {
+                closestCircle = circle;
+                minDistance = distance;
+            }
+        }
+
+        if (closestCircle != null) {
+            rect.setX(closestCircle.getCenterX() - rect.getWidth() / 2);
+            rect.setY(closestCircle.getCenterY() - rect.getHeight() / 2);
+        }
+    }
+
+    private void unsnapFromCircles(Rectangle rect, List<Circle> circles) {
+        for (Circle circle : circles) {
+            double rectCenterX = rect.getX() + rect.getWidth() / 2;
+            double rectCenterY = rect.getY() + rect.getHeight() / 2;
+            double circleCenterX = circle.getCenterX();
+            double circleCenterY = circle.getCenterY();
+            double distance = Math.sqrt(Math.pow(rectCenterX - circleCenterX, 2) + Math.pow(rectCenterY - circleCenterY, 2));
+
+            if (distance < circle.getRadius()) {
+                rect.setUserData(new double[]{rect.getX(), rect.getY()});
+                break;
+            }
+        }
+    }
+
 }

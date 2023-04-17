@@ -60,6 +60,10 @@ public class Rotor {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getPosition() {
         return rotorPosition;
     }

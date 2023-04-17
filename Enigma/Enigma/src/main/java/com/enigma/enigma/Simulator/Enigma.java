@@ -29,6 +29,12 @@ public class Enigma {
         this.plugboard = new Plugboard(plugboardConnections);
     }
 
+    public void setRotors(String[] rotors) {
+        this.leftRotor.setName(rotors[0]);
+        this.rightRotor.setName(rotors[2]);
+        this.leftRotor.setName(rotors[1]);
+    }
+
     public void rotate() {
         // If middle rotor notch - double-stepping
         if (middleRotor.isAtNotch()) {
