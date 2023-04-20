@@ -2,26 +2,19 @@ package com.enigma.enigma.Simulator;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -183,6 +176,34 @@ public class Main extends Application {
             enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
         });
 
+        /*
+          // create a popup
+        Popup popup = new Popup();
+
+        // set background
+        label.setStyle(" -fx-background-color: white;");
+
+        // add the label
+        popup.getContent().add(label);
+
+        // set size of label
+        label.setMinWidth(80);
+        label.setMinHeight(50);
+
+        // action event
+        EventHandler<ActionEvent> event =
+        new EventHandler<ActionEvent>() {
+
+            public void handle(ActionEvent e)
+            {
+                if (!popup.isShowing())
+                    popup.show(stage);
+                else
+                    popup.hide();
+            }
+        };
+         */
+
         Scene scene = new Scene(group, width, height, Color.DARKSLATEGRAY);
         scene.setFill(Color.GRAY);
 
@@ -243,28 +264,76 @@ public class Main extends Application {
             stage.show();
         });
 
-        double rectangleSize = 50;
-        double plugRadius = rectangleSize / 2;
+        double rectangleSize = 60;
         Rectangle rect1 = new Rectangle(50, 50, rectangleSize, rectangleSize);
         Rectangle rect2 = new Rectangle(250, 50, rectangleSize, rectangleSize);
-        Circle circle1 = new Circle(150, 150, plugRadius);
-        Circle circle2 = new Circle(350, 150, plugRadius);
+        rect1.setFill(Color.LIGHTSLATEGRAY);
+        rect2.setFill(Color.LIGHTSLATEGRAY);
         Line line = new Line();
 
-        plugboardGroup.getChildren().addAll(rect1, rect2, circle1, circle2, line);
+        // First Keyboard Row (q -> p)
+        Circle[] plugs = new Circle[26];
+        // create a list of all the circles for snapping
+        List<Circle> plugThings = new ArrayList<>();
+        double lastXthing = 0;
+        double xThing;
+        double plugRadiusThing = 15;
+        double plugPaddingThing = 60;
+
+        for (int i = 0; i < 10; i++) {
+            xThing = plugPaddingThing + (plugRadiusThing);
+            plugs[i] = new Circle(xThing + lastXthing, 350, plugRadiusThing);
+            plugs[i].setFill(Color.LIGHTSLATEGRAY);
+            plugs[i].setStroke(Color.BLACK);
+            plugboardGroup.getChildren().add(plugs[i]);
+
+            letterText[i] = new Text(plugs[i].getCenterX() - 5, plugs[i].getCenterY() + 5, String.valueOf(letters[i]));
+            plugboardGroup.getChildren().add(letterText[i]);
+            plugThings.add(plugs[i]);
+
+            lastXthing = xThing + lastXthing;
+        }
+        lastXthing = 0;
+        // Second Keyboard Row (a -> l)
+        for (int i = 10; i < 19; i++) {
+            xThing = plugPaddingThing + plugRadiusThing;
+            plugs[i] = new Circle(xThing + lastXthing + 40, 450, plugRadiusThing);
+            plugs[i].setFill(Color.LIGHTSLATEGRAY);
+            plugs[i].setStroke(Color.BLACK);
+            plugboardGroup.getChildren().add(plugs[i]);
+
+            letterText[i] = new Text(plugs[i].getCenterX() - 5, plugs[i].getCenterY() + 5, String.valueOf(letters[i]));
+            plugboardGroup.getChildren().add(letterText[i]);
+            plugThings.add(plugs[i]);
+
+            lastXthing = xThing + lastXthing;
+        }
+        lastXthing = 0;
+        // Third Keyboard Row (z -> m)
+        for (int i = 19; i < 26; i++) {
+            xThing = plugPaddingThing + plugRadiusThing;
+            plugs[i] = new Circle(xThing + lastXthing + 80, 550, plugRadiusThing);
+            plugs[i].setFill(Color.LIGHTSLATEGRAY);
+            plugs[i].setStroke(Color.BLACK);
+            plugboardGroup.getChildren().add((plugs[i]));
+            plugThings.add(plugs[i]);
+
+            letterText[i] = new Text(plugs[i].getCenterX() - 5, plugs[i].getCenterY() + 5, String.valueOf(letters[i]));
+            plugboardGroup.getChildren().add(letterText[i]);
+
+            lastXthing = xThing + lastXthing;
+        }
+
+        plugboardGroup.getChildren().addAll(rect1, rect2, line);
 
         line.startXProperty().bind(rect1.xProperty().add(rect1.widthProperty().divide(2)));
         line.startYProperty().bind(rect1.yProperty().add(rect1.heightProperty().divide(2)));
         line.endXProperty().bind(rect2.xProperty().add(rect2.widthProperty().divide(2)));
         line.endYProperty().bind(rect2.yProperty().add(rect2.heightProperty().divide(2)));
 
-// create a list of all the circles for snapping
-        List<Circle> plugs = new ArrayList<>();
-        plugs.add(circle1);
-        plugs.add(circle2);
 
-        addDraggable(rect1, plugs);
-        addDraggable(rect2, plugs);
+        addDraggable(rect1, plugThings);
+        addDraggable(rect2, plugThings);
 
 
         // Create the scene and set it on the primary stage
