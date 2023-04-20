@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -12,10 +13,12 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main extends Application {
@@ -125,8 +128,6 @@ public class Main extends Application {
         rotor2.setValue("II");
         rotor3.setValue("III");
 
-
-
         group.getChildren().add(rotor1);
         group.getChildren().add(rotor2);
         group.getChildren().add(rotor3);
@@ -139,8 +140,6 @@ public class Main extends Application {
 
         rotor3.setLayoutX(rotorMenuOffset + (2 * rotorMenuPadding));
         rotor3.setLayoutY(rotorMenuY);
-
-        rotor1.setStyle("-fx-font-size: 15px;");
 
         // set the background color of the dropdown menu
         rotor1.setStyle("-fx-background-color: gray; -fx-font-size: " + rotorMenuFontSize + "px; -fx-text-fill: black;");
@@ -165,23 +164,16 @@ public class Main extends Application {
         rotor3Heading.setLayoutY(rotorMenuY - 40);
         group.getChildren().add(rotor3Heading);
 
-
-        rotor1.setOnAction(event -> {
-            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
-        });
-        rotor2.setOnAction(event -> {
-            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
-        });
-        rotor3.setOnAction(event -> {
-            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
-        });
-
-        /*
-          // create a popup
+        // create a popup
         Popup popup = new Popup();
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setContentText("Cannot Use Two Of the Same Rotors!");
+
+        // create a label
+        Label label = new Label("Cannot Use Two Of the Same Rotors!");
 
         // set background
-        label.setStyle(" -fx-background-color: white;");
+        label.setStyle("-fx-background-color: white;");
 
         // add the label
         popup.getContent().add(label);
@@ -190,23 +182,32 @@ public class Main extends Application {
         label.setMinWidth(80);
         label.setMinHeight(50);
 
-        // action event
-        EventHandler<ActionEvent> event =
-        new EventHandler<ActionEvent>() {
 
-            public void handle(ActionEvent e)
-            {
-                if (!popup.isShowing())
-                    popup.show(stage);
-                else
-                    popup.hide();
+        rotor1.setOnAction(event -> {
+            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
+            if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
+                a.show();
+                rotor1.setValue("I");
             }
-        };
-         */
+        });
+        rotor2.setOnAction(event -> {
+            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
+            if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
+                a.show();
+                rotor1.setValue("I");
+            }
+        });
+        rotor3.setOnAction(event -> {
+            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
+            if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
+                a.show();
+                rotor1.setValue("I");
+            }
+        });
+
 
         Scene scene = new Scene(group, width, height, Color.DARKSLATEGRAY);
         scene.setFill(Color.GRAY);
-
 
 
         final boolean[] isExecuted = {false};
@@ -264,12 +265,7 @@ public class Main extends Application {
             stage.show();
         });
 
-        double rectangleSize = 60;
-        Rectangle rect1 = new Rectangle(50, 50, rectangleSize, rectangleSize);
-        Rectangle rect2 = new Rectangle(250, 50, rectangleSize, rectangleSize);
-        rect1.setFill(Color.LIGHTSLATEGRAY);
-        rect2.setFill(Color.LIGHTSLATEGRAY);
-        Line line = new Line();
+
 
         // First Keyboard Row (q -> p)
         Circle[] plugs = new Circle[26];
@@ -324,17 +320,69 @@ public class Main extends Application {
             lastXthing = xThing + lastXthing;
         }
 
-        plugboardGroup.getChildren().addAll(rect1, rect2, line);
 
-        line.startXProperty().bind(rect1.xProperty().add(rect1.widthProperty().divide(2)));
-        line.startYProperty().bind(rect1.yProperty().add(rect1.heightProperty().divide(2)));
-        line.endXProperty().bind(rect2.xProperty().add(rect2.widthProperty().divide(2)));
-        line.endYProperty().bind(rect2.yProperty().add(rect2.heightProperty().divide(2)));
+        // Plugs
+        Rectangle[] plugEnds = new Rectangle[10];
+        double rectangleSize = 40;
+        double plugWirePadding = 50;
+        double y;
+        double oldY = 0;
 
+        for (int i = 0; i < 5; i++) {
+            y = plugWirePadding + oldY;
+            plugEnds[i] = new Rectangle(30, y, rectangleSize, rectangleSize);
+            plugEnds[i].setFill(Color.LIGHTSLATEGRAY);
+            oldY = y;
+            plugboardGroup.getChildren().add(plugEnds[i]);
+            addDraggable(plugEnds[i], plugThings);
+        }
 
-        addDraggable(rect1, plugThings);
-        addDraggable(rect2, plugThings);
+        oldY = 0;
+        for (int i = 5; i < plugEnds.length; i++) {
+            y = plugWirePadding + oldY;
+            plugEnds[i] = new Rectangle(300, y, rectangleSize, rectangleSize);
+            plugEnds[i].setFill(Color.LIGHTSLATEGRAY);
+            oldY = y;
+            plugboardGroup.getChildren().add(plugEnds[i]);
+            addDraggable(plugEnds[i], plugThings);
+        }
 
+        Line wire1 = new Line();
+        Line wire2 = new Line();
+        Line wire3 = new Line();
+        Line wire4 = new Line();
+        Line wire5 = new Line();
+
+        wire1.startXProperty().bind(plugEnds[0].xProperty().add(plugEnds[0].widthProperty().divide(2)));
+        wire1.startYProperty().bind(plugEnds[0].yProperty().add(plugEnds[0].heightProperty().divide(2)));
+        wire1.endXProperty().bind(plugEnds[5].xProperty().add(plugEnds[5].widthProperty().divide(2)));
+        wire1.endYProperty().bind(plugEnds[5].yProperty().add(plugEnds[5].heightProperty().divide(2)));
+
+        wire2.startXProperty().bind(plugEnds[1].xProperty().add(plugEnds[1].widthProperty().divide(2)));
+        wire2.startYProperty().bind(plugEnds[1].yProperty().add(plugEnds[1].heightProperty().divide(2)));
+        wire2.endXProperty().bind(plugEnds[6].xProperty().add(plugEnds[6].widthProperty().divide(2)));
+        wire2.endYProperty().bind(plugEnds[6].yProperty().add(plugEnds[6].heightProperty().divide(2)));
+
+        wire3.startXProperty().bind(plugEnds[2].xProperty().add(plugEnds[2].widthProperty().divide(2)));
+        wire3.startYProperty().bind(plugEnds[2].yProperty().add(plugEnds[2].heightProperty().divide(2)));
+        wire3.endXProperty().bind(plugEnds[7].xProperty().add(plugEnds[7].widthProperty().divide(2)));
+        wire3.endYProperty().bind(plugEnds[7].yProperty().add(plugEnds[7].heightProperty().divide(2)));
+
+        wire4.startXProperty().bind(plugEnds[3].xProperty().add(plugEnds[3].widthProperty().divide(2)));
+        wire4.startYProperty().bind(plugEnds[3].yProperty().add(plugEnds[3].heightProperty().divide(2)));
+        wire4.endXProperty().bind(plugEnds[8].xProperty().add(plugEnds[8].widthProperty().divide(2)));
+        wire4.endYProperty().bind(plugEnds[8].yProperty().add(plugEnds[8].heightProperty().divide(2)));
+
+        wire5.startXProperty().bind(plugEnds[4].xProperty().add(plugEnds[4].widthProperty().divide(2)));
+        wire5.startYProperty().bind(plugEnds[4].yProperty().add(plugEnds[4].heightProperty().divide(2)));
+        wire5.endXProperty().bind(plugEnds[9].xProperty().add(plugEnds[9].widthProperty().divide(2)));
+        wire5.endYProperty().bind(plugEnds[9].yProperty().add(plugEnds[9].heightProperty().divide(2)));
+
+        plugboardGroup.getChildren().add(wire1);
+        plugboardGroup.getChildren().add(wire2);
+        plugboardGroup.getChildren().add(wire3);
+        plugboardGroup.getChildren().add(wire4);
+        plugboardGroup.getChildren().add(wire5);
 
         // Create the scene and set it on the primary stage
         stage.setScene(scene);
