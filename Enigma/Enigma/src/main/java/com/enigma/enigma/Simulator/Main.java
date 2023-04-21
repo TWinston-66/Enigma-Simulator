@@ -42,6 +42,8 @@ public class Main extends Application {
     // Plugboard button parameters
     double plugButtonFontSize = 17;
 
+
+    Plug[] plugSnaps = new Plug[10];
     Enigma enigma = new Enigma(new String[] {"VII", "V", "IV"}, "B", new int[] {10,5,12}, new int[] {1,2,3}, "AD FT WH JO PN");
 
 
@@ -194,14 +196,14 @@ public class Main extends Application {
             enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
             if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
                 a.show();
-                rotor1.setValue("I");
+                rotor2.setValue("I");
             }
         });
         rotor3.setOnAction(event -> {
             enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
             if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
                 a.show();
-                rotor1.setValue("I");
+                rotor3.setValue("I");
             }
         });
 
@@ -247,7 +249,8 @@ public class Main extends Application {
         button.setLayoutX(650);
         button.setLayoutY(25);
         group.getChildren().add(button);
-        button.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black;");
+        button.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
+                "-fx-border-color: black; -fx-border-width: 2;");
         button.setOnAction(event -> {
             stage.setScene(plugboard);
             stage.setTitle("Enigma Simulator");
@@ -258,13 +261,52 @@ public class Main extends Application {
         back.setLayoutX(700);
         back.setLayoutY(25);
         plugboardGroup.getChildren().add(back);
-        back.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black;");
+        back.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
+                "-fx-border-color: black; -fx-border-width: 2;");
         back.setOnAction(event -> {
             stage.setScene(scene);
             stage.setTitle("Enigma Simulator");
             stage.show();
         });
 
+        Alert notEnoughPlugsUsed = new Alert(Alert.AlertType.ERROR);
+        a.setContentText("Please Use All 5 Plugs!");
+
+
+        Button save = new Button("Save");
+        save.setLayoutX(700);
+        save.setLayoutY(200);
+        plugboardGroup.getChildren().add(save);
+        save.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
+                "-fx-border-color: black; -fx-border-width: 2;");
+
+        save.setOnMousePressed(event -> {
+            save.setStyle("-fx-background-color: yellow; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
+                    "-fx-border-color: black; -fx-border-width: 2;");
+
+            // Figure out + save connected letters
+            StringBuilder connections = new StringBuilder();
+
+            for (int i = 0; i < 5; i++) {
+                connections.append(plugSnaps[i].getDockedLetter().toUpperCase()).append(plugSnaps[i + 5].getDockedLetter().toUpperCase()).append(" ");
+            }
+
+            if (connections.length() < 13) {
+                notEnoughPlugsUsed.show();
+            }
+
+            System.out.println("Connected Letters: " + connections);
+
+            // Display Connected Letters
+
+            // Write Letters to Enigma Machine
+            enigma.setPlugboardConnections(connections.toString());
+
+        });
+        save.setOnMouseReleased(event -> {
+            save.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
+                    "-fx-border-color: black; -fx-border-width: 2;");
+        });
 
 
         // First Keyboard Row (q -> p)
@@ -323,6 +365,7 @@ public class Main extends Application {
 
         // Plugs
         Rectangle[] plugEnds = new Rectangle[10];
+        //Plug[] plugSnaps = new Plug[10];
         double rectangleSize = 40;
         double plugWirePadding = 50;
         double y;
@@ -334,7 +377,8 @@ public class Main extends Application {
             plugEnds[i].setFill(Color.LIGHTSLATEGRAY);
             oldY = y;
             plugboardGroup.getChildren().add(plugEnds[i]);
-            addDraggable(plugEnds[i], plugThings);
+            addDraggable(plugEnds[i], plugThings, i);
+            plugSnaps[i] = new Plug(false);
         }
 
         oldY = 0;
@@ -344,7 +388,8 @@ public class Main extends Application {
             plugEnds[i].setFill(Color.LIGHTSLATEGRAY);
             oldY = y;
             plugboardGroup.getChildren().add(plugEnds[i]);
-            addDraggable(plugEnds[i], plugThings);
+            addDraggable(plugEnds[i], plugThings, i);
+            plugSnaps[i] = new Plug(false);
         }
 
         Line wire1 = new Line();
@@ -395,7 +440,7 @@ public class Main extends Application {
     }
 
     // create a method to make a rectangle draggable and snap it to the closest circle
-    private void addDraggable(Rectangle rect, List<Circle> circles) {
+    private void addDraggable(Rectangle rect, List<Circle> circles, int rectIndex) {
         rect.setOnMousePressed(event -> {
             rect.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
             unsnapFromCircles(rect, circles);
@@ -407,18 +452,25 @@ public class Main extends Application {
             rect.setX(rect.getX() + deltaX);
             rect.setY(rect.getY() + deltaY);
             rect.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
-            snapToCircles(rect, circles);
+
+            // Letter Snapped Index + Save Docked Letter to Plug
+            int circleSnapped = snapToCircles(rect, circles);
+            char letter = letters[circleSnapped];
+            plugSnaps[rectIndex].setDockedLetter(String.valueOf(letter));
+
         });
     }
 
-    private void snapToCircles(Rectangle rect, List<Circle> circles) {
+    private int snapToCircles(Rectangle rect, List<Circle> circles) {
         double rectCenterX = rect.getX() + rect.getWidth() / 2;
         double rectCenterY = rect.getY() + rect.getHeight() / 2;
 
         Circle closestCircle = null;
         double minDistance = Double.MAX_VALUE;
+        int closestCircleIndex = -1;
 
-        for (Circle circle : circles) {
+        for (int i = 0; i < circles.size(); i++) {
+            Circle circle = circles.get(i);
             double circleCenterX = circle.getCenterX();
             double circleCenterY = circle.getCenterY();
             double distance = Math.sqrt(Math.pow(rectCenterX - circleCenterX, 2) + Math.pow(rectCenterY - circleCenterY, 2));
@@ -426,6 +478,7 @@ public class Main extends Application {
             if (distance < circle.getRadius() && distance < minDistance) {
                 closestCircle = circle;
                 minDistance = distance;
+                closestCircleIndex = i;
             }
         }
 
@@ -433,7 +486,10 @@ public class Main extends Application {
             rect.setX(closestCircle.getCenterX() - rect.getWidth() / 2);
             rect.setY(closestCircle.getCenterY() - rect.getHeight() / 2);
         }
+
+        return closestCircleIndex;
     }
+
 
     private void unsnapFromCircles(Rectangle rect, List<Circle> circles) {
         for (Circle circle : circles) {

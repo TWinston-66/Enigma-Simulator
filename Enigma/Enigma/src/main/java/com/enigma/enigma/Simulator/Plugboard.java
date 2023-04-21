@@ -22,6 +22,10 @@ public class Plugboard {
         return mapping;
     }
 
+    public void setConnections(String connections) {
+        this.wiring = decodePlugboard(connections);
+    }
+
     public static Set<Integer> getUnpluggedCharacters(String plugboard) {
         Set<Integer> unpluggedCharacters = new HashSet<>();
         for (int i = 0; i < 26; i++) {
