@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -273,6 +274,79 @@ public class Main extends Application {
         notEnoughPlugsUsed.setContentText("Please Use All 5 Plugs!");
 
 
+
+        Label connectedLettersLabel1 = new Label("AH");
+        Label connectedLettersLabel2 = new Label("TB");
+        Label connectedLettersLabel3 = new Label("KJ");
+        Label connectedLettersLabel4 = new Label("PI");
+        Label connectedLettersLabel5 = new Label("QE");
+        Label connectedLettersLabel6 = new Label("DV");
+        Label connectedLettersLabel7 = new Label("YO");
+        Label connectedLettersLabel8 = new Label("NF");
+        Label connectedLettersLabel9 = new Label("ML");
+        Label connectedLettersLabel10 = new Label("XZ");
+
+        connectedLettersLabel1.setLayoutX(400);
+        connectedLettersLabel1.setLayoutY(55);
+        connectedLettersLabel1.setFont(new Font(20));
+
+        connectedLettersLabel2.setLayoutX(400);
+        connectedLettersLabel2.setLayoutY(80);
+        connectedLettersLabel2.setFont(new Font(20));
+
+        connectedLettersLabel3.setLayoutX(400);
+        connectedLettersLabel3.setLayoutY(105);
+        connectedLettersLabel3.setFont(new Font(20));
+
+        connectedLettersLabel4.setLayoutX(400);
+        connectedLettersLabel4.setLayoutY(130);
+        connectedLettersLabel4.setFont(new Font(20));
+
+        connectedLettersLabel5.setLayoutX(400);
+        connectedLettersLabel5.setLayoutY(155);
+        connectedLettersLabel5.setFont(new Font(20));
+
+        connectedLettersLabel6.setLayoutX(400);
+        connectedLettersLabel6.setLayoutY(170);
+        connectedLettersLabel6.setFont(new Font(20));
+
+        connectedLettersLabel7.setLayoutX(400);
+        connectedLettersLabel7.setLayoutY(205);
+        connectedLettersLabel7.setFont(new Font(20));
+
+        connectedLettersLabel8.setLayoutX(400);
+        connectedLettersLabel8.setLayoutY(240);
+        connectedLettersLabel8.setFont(new Font(20));
+
+        connectedLettersLabel9.setLayoutX(400);
+        connectedLettersLabel9.setLayoutY(275);
+        connectedLettersLabel9.setFont(new Font(20));
+
+        connectedLettersLabel10.setLayoutX(400);
+        connectedLettersLabel10.setLayoutY(310);
+        connectedLettersLabel10.setFont(new Font(20));
+
+        /*
+        drawArrowLine(450, 70, 580, 70, plugboardGroup);
+        drawArrowLine(450, 120, 580, 120, plugboardGroup);
+        drawArrowLine(450, 170, 580, 170, plugboardGroup);
+        drawArrowLine(450, 220, 580, 220, plugboardGroup);
+        drawArrowLine(450, 270, 580, 270, plugboardGroup);
+         */
+
+        plugboardGroup.getChildren().add(connectedLettersLabel1);
+        plugboardGroup.getChildren().add(connectedLettersLabel2);
+        plugboardGroup.getChildren().add(connectedLettersLabel3);
+        plugboardGroup.getChildren().add(connectedLettersLabel4);
+        plugboardGroup.getChildren().add(connectedLettersLabel5);
+        plugboardGroup.getChildren().add(connectedLettersLabel6);
+        plugboardGroup.getChildren().add(connectedLettersLabel7);
+        plugboardGroup.getChildren().add(connectedLettersLabel8);
+        plugboardGroup.getChildren().add(connectedLettersLabel9);
+        plugboardGroup.getChildren().add(connectedLettersLabel10);
+
+
+
         Button save = new Button("Save");
         save.setLayoutX(700);
         save.setLayoutY(200);
@@ -429,6 +503,13 @@ public class Main extends Application {
         plugboardGroup.getChildren().add(wire4);
         plugboardGroup.getChildren().add(wire5);
 
+        drawArrowLine(450, 70, 580, 70, plugboardGroup);
+        drawArrowLine(450, 120, 580, 120, plugboardGroup);
+        drawArrowLine(450, 170, 580, 170, plugboardGroup);
+        drawArrowLine(450, 220, 580, 220, plugboardGroup);
+        drawArrowLine(450, 270, 580, 270, plugboardGroup);
+
+
         // Create the scene and set it on the primary stage
         stage.setScene(scene);
         stage.setTitle("Enigma Simulator");
@@ -504,6 +585,34 @@ public class Main extends Application {
                 break;
             }
         }
+    }
+
+    public static void drawArrowLine(double startX, double startY, double endX, double endY, Group group) {
+        // get the slope of the line and find its angle
+        double slope = (startY - endY) / (startX - endX);
+        double lineAngle = Math.atan(slope);
+
+        double arrowAngle = startX > endX ? Math.toRadians(45) : -Math.toRadians(225);
+
+        Line line = new Line(startX, startY, endX, endY);
+
+        double lineLength = Math.sqrt(Math.pow(startX - endX, 2) + Math.pow(startY - endY, 2));
+        double arrowLength = lineLength / 10;
+
+        // create the arrow legs
+        Line arrow1 = new Line();
+        arrow1.setStartX(line.getEndX());
+        arrow1.setStartY(line.getEndY());
+        arrow1.setEndX(line.getEndX() + arrowLength * Math.cos(lineAngle - arrowAngle));
+        arrow1.setEndY(line.getEndY() + arrowLength * Math.sin(lineAngle - arrowAngle));
+
+        Line arrow2 = new Line();
+        arrow2.setStartX(line.getEndX());
+        arrow2.setStartY(line.getEndY());
+        arrow2.setEndX(line.getEndX() + arrowLength * Math.cos(lineAngle + arrowAngle));
+        arrow2.setEndY(line.getEndY() + arrowLength * Math.sin(lineAngle + arrowAngle));
+
+        group.getChildren().addAll(line, arrow1, arrow2);
     }
 
 }
