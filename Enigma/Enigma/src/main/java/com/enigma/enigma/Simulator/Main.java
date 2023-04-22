@@ -270,7 +270,7 @@ public class Main extends Application {
         });
 
         Alert notEnoughPlugsUsed = new Alert(Alert.AlertType.ERROR);
-        a.setContentText("Please Use All 5 Plugs!");
+        notEnoughPlugsUsed.setContentText("Please Use All 5 Plugs!");
 
 
         Button save = new Button("Save");
@@ -295,7 +295,7 @@ public class Main extends Application {
                 notEnoughPlugsUsed.show();
             }
 
-            System.out.println("Connected Letters: " + connections);
+            System.out.println("Connected Letters: " + enigma.getPlugboardConnections());
 
             // Display Connected Letters
 

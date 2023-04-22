@@ -5,9 +5,11 @@ import java.util.Set;
 
 public class Plugboard {
     private int[] wiring;
+    private String connections;
 
     public Plugboard(String connections) {
         this.wiring = decodePlugboard(connections);
+        this.connections = connections;
     }
 
     public int forward(int c) {
@@ -24,6 +26,11 @@ public class Plugboard {
 
     public void setConnections(String connections) {
         this.wiring = decodePlugboard(connections);
+        this.connections = connections;
+    }
+
+    public String getConnections() {
+        return this.connections;
     }
 
     public static Set<Integer> getUnpluggedCharacters(String plugboard) {

@@ -37,6 +37,10 @@ public class Enigma {
         this.plugboard.setConnections(plugboardConnections);
     }
 
+    public String getPlugboardConnections() {
+        return this.plugboard.getConnections();
+    }
+
     public void rotate() {
         // If middle rotor notch - double-stepping
         if (middleRotor.isAtNotch()) {
