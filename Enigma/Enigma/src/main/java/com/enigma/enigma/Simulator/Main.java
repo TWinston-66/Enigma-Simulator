@@ -440,7 +440,6 @@ public class Main extends Application {
 
         // Plugs
         Rectangle[] plugEnds = new Rectangle[10];
-        //Plug[] plugSnaps = new Plug[10];
         double rectangleSize = 40;
         double plugWirePadding = 50;
         double y;
@@ -452,7 +451,7 @@ public class Main extends Application {
             plugEnds[i].setFill(Color.LIGHTSLATEGRAY);
             oldY = y;
             plugboardGroup.getChildren().add(plugEnds[i]);
-            addDraggable(plugEnds[i], plugThings, i);
+            addDraggable(plugEnds[i], plugThings, i, plugboardGroup);
             plugSnaps[i] = new Plug(false);
         }
 
@@ -463,7 +462,7 @@ public class Main extends Application {
             plugEnds[i].setFill(Color.LIGHTSLATEGRAY);
             oldY = y;
             plugboardGroup.getChildren().add(plugEnds[i]);
-            addDraggable(plugEnds[i], plugThings, i);
+            addDraggable(plugEnds[i], plugThings, i, plugboardGroup);
             plugSnaps[i] = new Plug(false);
         }
 
@@ -510,7 +509,6 @@ public class Main extends Application {
         drawArrowLine(450, 220, 580, 220, plugboardGroup);
         drawArrowLine(450, 270, 580, 270, plugboardGroup);
 
-
         // Create the scene and set it on the primary stage
         stage.setScene(scene);
         stage.setTitle("Enigma Simulator");
@@ -522,10 +520,22 @@ public class Main extends Application {
     }
 
     // create a method to make a rectangle draggable and snap it to the closest circle
-    private void addDraggable(Rectangle rect, List<Circle> circles, int rectIndex) {
+    private void addDraggable(Rectangle rect, List<Circle> circles, int rectIndex, Group root) {
+
+        // Set Rectangle to Docked Letter
+        Text text = new Text();
+        text.setFont(Font.font("Arial", 16)); // Set font size and type
+        text.setFill(Color.BLACK); // Set font color
+        text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
+        text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
+        root.getChildren().add(text); // Add text to the same group as the rectangle
+
         rect.setOnMousePressed(event -> {
             rect.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
             unsnapFromCircles(rect, circles);
+            text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
+            text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
+            text.setText("");
         });
         rect.setOnMouseDragged(event -> {
             double[] userData = (double[]) rect.getUserData();
@@ -539,7 +549,10 @@ public class Main extends Application {
             int circleSnapped = snapToCircles(rect, circles);
             char letter = letters[circleSnapped];
             plugSnaps[rectIndex].setDockedLetter(String.valueOf(letter));
-            //circles.get(circleSnapped).set
+
+            text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
+            text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
+            text.setText(String.valueOf(letter));
 
         });
     }
