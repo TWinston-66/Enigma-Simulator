@@ -1,7 +1,8 @@
 TODO
-1) Align Connected Letters Labels
-2) Write Connected Letters To Display On Save Button Press
-3) Show letter through rectangle when snapped
+1) Show letter through rectangle when snapped
+2) Two plugs cannot snap to the same plug
+3) Plugboard reset button
+4) Plugboard save button does not go back to gray when "Use all 5 wires" error is thrown
 
 BRAINSTORMING
 - Color Theme Selector?

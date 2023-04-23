@@ -274,65 +274,57 @@ public class Main extends Application {
         notEnoughPlugsUsed.setContentText("Please Use All 5 Plugs!");
 
 
-
-        Label connectedLettersLabel1 = new Label("AH");
-        Label connectedLettersLabel2 = new Label("TB");
-        Label connectedLettersLabel3 = new Label("KJ");
-        Label connectedLettersLabel4 = new Label("PI");
-        Label connectedLettersLabel5 = new Label("QE");
-        Label connectedLettersLabel6 = new Label("DV");
-        Label connectedLettersLabel7 = new Label("YO");
-        Label connectedLettersLabel8 = new Label("NF");
-        Label connectedLettersLabel9 = new Label("ML");
-        Label connectedLettersLabel10 = new Label("XZ");
+        Label connectedLettersLabel1 = new Label("");
+        Label connectedLettersLabel2 = new Label("");
+        Label connectedLettersLabel3 = new Label("");
+        Label connectedLettersLabel4 = new Label("");
+        Label connectedLettersLabel5 = new Label("");
+        Label connectedLettersLabel6 = new Label("");
+        Label connectedLettersLabel7 = new Label("");
+        Label connectedLettersLabel8 = new Label("");
+        Label connectedLettersLabel9 = new Label("");
+        Label connectedLettersLabel10 = new Label("");
 
         connectedLettersLabel1.setLayoutX(400);
         connectedLettersLabel1.setLayoutY(55);
         connectedLettersLabel1.setFont(new Font(20));
 
-        connectedLettersLabel2.setLayoutX(400);
-        connectedLettersLabel2.setLayoutY(80);
+        connectedLettersLabel2.setLayoutX(600);
+        connectedLettersLabel2.setLayoutY(55);
         connectedLettersLabel2.setFont(new Font(20));
 
         connectedLettersLabel3.setLayoutX(400);
         connectedLettersLabel3.setLayoutY(105);
         connectedLettersLabel3.setFont(new Font(20));
 
-        connectedLettersLabel4.setLayoutX(400);
-        connectedLettersLabel4.setLayoutY(130);
+        connectedLettersLabel4.setLayoutX(600);
+        connectedLettersLabel4.setLayoutY(105);
         connectedLettersLabel4.setFont(new Font(20));
 
         connectedLettersLabel5.setLayoutX(400);
         connectedLettersLabel5.setLayoutY(155);
         connectedLettersLabel5.setFont(new Font(20));
 
-        connectedLettersLabel6.setLayoutX(400);
-        connectedLettersLabel6.setLayoutY(170);
+        connectedLettersLabel6.setLayoutX(600);
+        connectedLettersLabel6.setLayoutY(155);
         connectedLettersLabel6.setFont(new Font(20));
 
         connectedLettersLabel7.setLayoutX(400);
         connectedLettersLabel7.setLayoutY(205);
         connectedLettersLabel7.setFont(new Font(20));
 
-        connectedLettersLabel8.setLayoutX(400);
-        connectedLettersLabel8.setLayoutY(240);
+        connectedLettersLabel8.setLayoutX(600);
+        connectedLettersLabel8.setLayoutY(205);
         connectedLettersLabel8.setFont(new Font(20));
 
         connectedLettersLabel9.setLayoutX(400);
-        connectedLettersLabel9.setLayoutY(275);
+        connectedLettersLabel9.setLayoutY(255);
         connectedLettersLabel9.setFont(new Font(20));
 
-        connectedLettersLabel10.setLayoutX(400);
-        connectedLettersLabel10.setLayoutY(310);
+        connectedLettersLabel10.setLayoutX(600);
+        connectedLettersLabel10.setLayoutY(255);
         connectedLettersLabel10.setFont(new Font(20));
 
-        /*
-        drawArrowLine(450, 70, 580, 70, plugboardGroup);
-        drawArrowLine(450, 120, 580, 120, plugboardGroup);
-        drawArrowLine(450, 170, 580, 170, plugboardGroup);
-        drawArrowLine(450, 220, 580, 220, plugboardGroup);
-        drawArrowLine(450, 270, 580, 270, plugboardGroup);
-         */
 
         plugboardGroup.getChildren().add(connectedLettersLabel1);
         plugboardGroup.getChildren().add(connectedLettersLabel2);
@@ -344,7 +336,6 @@ public class Main extends Application {
         plugboardGroup.getChildren().add(connectedLettersLabel8);
         plugboardGroup.getChildren().add(connectedLettersLabel9);
         plugboardGroup.getChildren().add(connectedLettersLabel10);
-
 
 
         Button save = new Button("Save");
@@ -372,6 +363,16 @@ public class Main extends Application {
             System.out.println("Connected Letters: " + enigma.getPlugboardConnections());
 
             // Display Connected Letters
+            connectedLettersLabel1.setText(plugSnaps[0].getDockedLetter());
+            connectedLettersLabel2.setText(plugSnaps[5].getDockedLetter());
+            connectedLettersLabel3.setText(plugSnaps[1].getDockedLetter());
+            connectedLettersLabel4.setText(plugSnaps[6].getDockedLetter());
+            connectedLettersLabel5.setText(plugSnaps[2].getDockedLetter());
+            connectedLettersLabel6.setText(plugSnaps[7].getDockedLetter());
+            connectedLettersLabel7.setText(plugSnaps[3].getDockedLetter());
+            connectedLettersLabel8.setText(plugSnaps[8].getDockedLetter());
+            connectedLettersLabel9.setText(plugSnaps[4].getDockedLetter());
+            connectedLettersLabel10.setText(plugSnaps[8].getDockedLetter());
 
             // Write Letters to Enigma Machine
             enigma.setPlugboardConnections(connections.toString());
@@ -538,6 +539,7 @@ public class Main extends Application {
             int circleSnapped = snapToCircles(rect, circles);
             char letter = letters[circleSnapped];
             plugSnaps[rectIndex].setDockedLetter(String.valueOf(letter));
+            //circles.get(circleSnapped).set
 
         });
     }
