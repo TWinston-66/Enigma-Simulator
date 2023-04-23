@@ -1,4 +1,5 @@
 TODO
+1) Major Bugs in plugboard backend
 1) Two plugs cannot snap to the same plug
 2) Plugboard reset button
 3) Plugboard save button does not go back to gray when "Use all 5 wires" error is thrown
