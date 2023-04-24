@@ -241,6 +241,35 @@ public class Main extends Application {
             }
         });
 
+
+        Group helpGroup = new Group();
+        Scene helpScene = new Scene(helpGroup, width, height, Color.DARKSLATEGRAY);
+        helpScene.setFill(Color.GRAY);
+
+        Button help = new Button("Help");
+        help.setLayoutX(50);
+        help.setLayoutY(25);
+        group.getChildren().add(help);
+        help.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
+                "-fx-border-color: black; -fx-border-width: 2;");
+        help.setOnAction(event -> {
+            stage.setScene(helpScene);
+            stage.setTitle("Enigma Simulator");
+            stage.show();
+        });
+
+        Button helpBack = new Button("Back");
+        helpBack.setLayoutX(50);
+        helpBack.setLayoutY(25);
+        helpGroup.getChildren().add(helpBack);
+        helpBack.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
+                "-fx-border-color: black; -fx-border-width: 2;");
+        helpBack.setOnAction(event -> {
+            stage.setScene(scene);
+            stage.setTitle("Enigma Simulator");
+            stage.show();
+        });
+
         Group plugboardGroup = new Group();
         Scene plugboard = new Scene(plugboardGroup, width, height, Color.DARKSLATEGRAY);
         plugboard.setFill(Color.GRAY);
@@ -258,6 +287,7 @@ public class Main extends Application {
             stage.show();
         });
 
+
         Button back = new Button("Back");
         back.setLayoutX(700);
         back.setLayoutY(25);
@@ -274,16 +304,17 @@ public class Main extends Application {
         notEnoughPlugsUsed.setContentText("Please Use All 5 Plugs!");
 
 
-        Label connectedLettersLabel1 = new Label("");
-        Label connectedLettersLabel2 = new Label("");
-        Label connectedLettersLabel3 = new Label("");
-        Label connectedLettersLabel4 = new Label("");
-        Label connectedLettersLabel5 = new Label("");
-        Label connectedLettersLabel6 = new Label("");
-        Label connectedLettersLabel7 = new Label("");
-        Label connectedLettersLabel8 = new Label("");
-        Label connectedLettersLabel9 = new Label("");
-        Label connectedLettersLabel10 = new Label("");
+        //AD FT WH JO PN
+        Label connectedLettersLabel1 = new Label("A");
+        Label connectedLettersLabel2 = new Label("D");
+        Label connectedLettersLabel3 = new Label("F");
+        Label connectedLettersLabel4 = new Label("T");
+        Label connectedLettersLabel5 = new Label("W");
+        Label connectedLettersLabel6 = new Label("H");
+        Label connectedLettersLabel7 = new Label("J");
+        Label connectedLettersLabel8 = new Label("O");
+        Label connectedLettersLabel9 = new Label("P");
+        Label connectedLettersLabel10 = new Label("N");
 
         connectedLettersLabel1.setLayoutX(400);
         connectedLettersLabel1.setLayoutY(55);
@@ -358,9 +389,9 @@ public class Main extends Application {
 
             if (connections.length() < 13) {
                 notEnoughPlugsUsed.show();
+                save.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
+                        "-fx-border-color: black; -fx-border-width: 2;");
             }
-
-            System.out.println("Connected Letters: " + enigma.getPlugboardConnections());
 
             // Display Connected Letters
             connectedLettersLabel1.setText(plugSnaps[0].getDockedLetter());
@@ -372,7 +403,7 @@ public class Main extends Application {
             connectedLettersLabel7.setText(plugSnaps[3].getDockedLetter());
             connectedLettersLabel8.setText(plugSnaps[8].getDockedLetter());
             connectedLettersLabel9.setText(plugSnaps[4].getDockedLetter());
-            connectedLettersLabel10.setText(plugSnaps[8].getDockedLetter());
+            connectedLettersLabel10.setText(plugSnaps[9].getDockedLetter());
 
             // Write Letters to Enigma Machine
             enigma.setPlugboardConnections(connections.toString());
@@ -382,6 +413,13 @@ public class Main extends Application {
             save.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
                     "-fx-border-color: black; -fx-border-width: 2;");
         });
+
+        Button reset = new Button("Reset");
+        reset.setLayoutX(700);
+        reset.setLayoutY(250);
+        //plugboardGroup.getChildren().add(reset);
+        reset.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
+                "-fx-border-color: black; -fx-border-width: 2;");
 
 
         // First Keyboard Row (q -> p)
@@ -509,6 +547,7 @@ public class Main extends Application {
         drawArrowLine(450, 220, 580, 220, plugboardGroup);
         drawArrowLine(450, 270, 580, 270, plugboardGroup);
 
+
         // Create the scene and set it on the primary stage
         stage.setScene(scene);
         stage.setTitle("Enigma Simulator");
@@ -550,6 +589,7 @@ public class Main extends Application {
             char letter = letters[circleSnapped];
             plugSnaps[rectIndex].setDockedLetter(String.valueOf(letter));
 
+            //System.out.println("Rectangle: " + rectIndex + " snapped to " + letter);
             text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
             text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
             text.setText(String.valueOf(letter));
