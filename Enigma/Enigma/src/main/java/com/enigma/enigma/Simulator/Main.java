@@ -4,10 +4,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -22,7 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main extends Application {
     String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
+    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char[] letters = letterOrder.toCharArray();
+    char[] alphabetOrder = alphabet.toCharArray();
 
     // Window Parameters
     double width = 825;
@@ -167,6 +166,61 @@ public class Main extends Application {
         rotor3Heading.setLayoutY(rotorMenuY - 40);
         group.getChildren().add(rotor3Heading);
 
+        ChoiceBox<String> rotor1Position = new ChoiceBox<>();
+        ChoiceBox<String> rotor2Position = new ChoiceBox<>();
+        ChoiceBox<String> rotor3Position = new ChoiceBox<>();
+        int[] rotorPositions = {0, 0, 0};
+        rotor1Position.setLayoutX(80);
+        rotor1Position.setLayoutY(200);
+
+        for (char letter:letters) {
+            rotor1Position.getItems().add(String.valueOf(letter));
+        }
+
+        rotor1Position.setOnAction((event) -> {
+            Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
+
+            rotorPositions[0] = alphabet.indexOf(selectedItem.toString());
+
+            enigma.setRotorPositions(rotorPositions);
+        });
+
+        group.getChildren().add(rotor1Position);
+
+        rotor2Position.setLayoutX(380);
+        rotor2Position.setLayoutY(200);
+
+        for (char letter:letters) {
+            rotor2Position.getItems().add(String.valueOf(letter));
+        }
+
+        rotor2Position.setOnAction((event) -> {
+            Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
+
+            rotorPositions[1] = alphabet.indexOf(selectedItem.toString());
+
+            enigma.setRotorPositions(rotorPositions);
+        });
+
+        group.getChildren().add(rotor2Position);
+
+        rotor3Position.setLayoutX(680);
+        rotor3Position.setLayoutY(200);
+
+        for (char letter:letters) {
+            rotor3Position.getItems().add(String.valueOf(letter));
+        }
+
+        rotor3Position.setOnAction((event) -> {
+            Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
+
+            rotorPositions[2] = alphabet.indexOf(selectedItem.toString());
+
+            enigma.setRotorPositions(rotorPositions);
+        });
+
+        group.getChildren().add(rotor3Position);
+
         // create a popup
         Popup popup = new Popup();
         Alert a = new Alert(Alert.AlertType.ERROR);
@@ -306,8 +360,6 @@ public class Main extends Application {
         moreThanOneSnappedPlug = new Alert(Alert.AlertType.ERROR);
         moreThanOneSnappedPlug.setContentText("Only One Connection Per Plug!");
 
-
-        //AD FT WH JO PN
         Label connectedLettersLabel1 = new Label("A");
         Label connectedLettersLabel2 = new Label("D");
         Label connectedLettersLabel3 = new Label("F");

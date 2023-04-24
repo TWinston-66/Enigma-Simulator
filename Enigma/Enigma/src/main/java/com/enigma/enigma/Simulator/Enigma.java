@@ -37,6 +37,12 @@ public class Enigma {
         this.plugboard.setConnections(plugboardConnections);
     }
 
+    public void setRotorPositions(int[] rotorPositions) {
+        this.leftRotor.setRotorPosition(rotorPositions[0]);
+        this.middleRotor.setRotorPosition(rotorPositions[1]);
+        this.rightRotor.setRotorPosition(rotorPositions[2]);
+    }
+
     public String getPlugboardConnections() {
         return this.plugboard.getConnections();
     }

@@ -68,6 +68,10 @@ public class Rotor {
         return rotorPosition;
     }
 
+    public void setRotorPosition(int rotorPosition) {
+        this.rotorPosition = rotorPosition;
+    }
+
     protected static int[] decodeWiring(String encoding) {
         char[] charWiring = encoding.toCharArray();
         int[] wiring = new int[charWiring.length];
