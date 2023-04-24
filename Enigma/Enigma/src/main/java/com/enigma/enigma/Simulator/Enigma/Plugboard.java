@@ -1,4 +1,4 @@
-package com.enigma.enigma.Simulator;
+package com.enigma.enigma.Simulator.Enigma;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -8,4 +8,6 @@ module com.enigma.enigma {
     //exports com.enigma.enigma;
     exports com.enigma.enigma.Simulator;
     opens com.enigma.enigma.Simulator to javafx.fxml;
+    exports com.enigma.enigma.Simulator.Enigma;
+    opens com.enigma.enigma.Simulator.Enigma to javafx.fxml;
 }

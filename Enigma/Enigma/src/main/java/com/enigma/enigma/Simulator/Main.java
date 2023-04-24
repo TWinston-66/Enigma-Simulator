@@ -1,10 +1,15 @@
 package com.enigma.enigma.Simulator;
 
+import com.enigma.enigma.Simulator.Enigma.Enigma;
+import com.enigma.enigma.Simulator.Enigma.Plug;
+import com.enigma.enigma.Simulator.UI.*;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -14,28 +19,20 @@ import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main extends Application {
     String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
     String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char[] letters = letterOrder.toCharArray();
-    char[] alphabetOrder = alphabet.toCharArray();
 
     // Window Parameters
     double width = 825;
     double height = 600;
-
-    // Glow-board Parameters
-    double keyPadding = 50;
-    double keyRadius = 25;
-
-    // Rotor Parameters
-    double rotorMenuPadding = 300;
-    double rotorMenuY = 150;
-    double rotorMenuOffset = 75;
-    double rotorMenuFontSize = 17;
 
     // Plugboard button parameters
     double plugButtonFontSize = 17;
@@ -46,125 +43,21 @@ public class Main extends Application {
     Plug[] plugSnaps = new Plug[10];
     Enigma enigma = new Enigma(new String[] {"VII", "V", "IV"}, "B", new int[] {10,5,12}, new int[] {1,2,3}, "AD FT WH JO PN");
 
-
+    Keyboard keyboard;
+    Rotors rotors;
 
     @Override
     public void start(Stage stage) {
         // Object Group
         Group group = new Group();
 
-        // First Keyboard Row (q -> p)
-        Circle[] circles = new Circle[26];
-        Text[] letterText = new Text[26];
-        double lastX = 0;
-        double x;
+        // Keyboard
+        keyboard = new Keyboard(50, 25, group);
+        keyboard.drawKeyboard();
 
-        for (int i = 0; i < 10; i++) {
-            x = keyPadding + (keyRadius);
-            circles[i] = new Circle(x + lastX, 350, keyRadius);
-            circles[i].setFill(Color.LIGHTSLATEGRAY);
-            circles[i].setStroke(Color.BLACK);
-            group.getChildren().add(circles[i]);
-
-            letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(letters[i]));
-            group.getChildren().add(letterText[i]);
-
-            lastX = x + lastX;
-        }
-        lastX = 0;
-        // Second Keyboard Row (a -> l)
-        for (int i = 10; i < 19; i++) {
-            x = keyPadding + keyRadius;
-            circles[i] = new Circle(x + lastX + 40, 450, keyRadius);
-            circles[i].setFill(Color.LIGHTSLATEGRAY);
-            circles[i].setStroke(Color.BLACK);
-            group.getChildren().add(circles[i]);
-
-            letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(letters[i]));
-            group.getChildren().add(letterText[i]);
-
-            lastX = x + lastX;
-        }
-        lastX = 0;
-        // Third Keyboard Row (z -> m)
-        for (int i = 19; i < 26; i++) {
-            x = keyPadding + keyRadius;
-            circles[i] = new Circle(x + lastX + 80, 550, keyRadius);
-            circles[i].setFill(Color.LIGHTSLATEGRAY);
-            circles[i].setStroke(Color.BLACK);
-            group.getChildren().add((circles[i]));
-
-            letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(letters[i]));
-            group.getChildren().add(letterText[i]);
-
-            lastX = x + lastX;
-        }
-
-
-        ComboBox<String> rotor1 = new ComboBox<>(FXCollections.observableArrayList(
-                "I",
-                "II",
-                "III",
-                "IV",
-                "V"
-        ));
-
-        ComboBox<String> rotor2 = new ComboBox<>(FXCollections.observableArrayList(
-                "I",
-                "II",
-                "III",
-                "IV",
-                "V"
-        ));
-
-        ComboBox<String> rotor3 = new ComboBox<>(FXCollections.observableArrayList(
-                "I",
-                "II",
-                "III",
-                "IV",
-                "V"
-        ));
-
-
-        rotor1.setValue("I");
-        rotor2.setValue("II");
-        rotor3.setValue("III");
-
-        group.getChildren().add(rotor1);
-        group.getChildren().add(rotor2);
-        group.getChildren().add(rotor3);
-
-        rotor1.setLayoutX(rotorMenuOffset);
-        rotor1.setLayoutY(rotorMenuY);
-
-        rotor2.setLayoutX(rotorMenuOffset + rotorMenuPadding);
-        rotor2.setLayoutY(rotorMenuY);
-
-        rotor3.setLayoutX(rotorMenuOffset + (2 * rotorMenuPadding));
-        rotor3.setLayoutY(rotorMenuY);
-
-        // set the background color of the dropdown menu
-        rotor1.setStyle("-fx-background-color: gray; -fx-font-size: " + rotorMenuFontSize + "px; -fx-text-fill: black;");
-        rotor2.setStyle("-fx-background-color: gray; -fx-font-size: " + rotorMenuFontSize + "px; -fx-text-fill: black;");
-        rotor3.setStyle("-fx-background-color: gray; -fx-font-size: " + rotorMenuFontSize + "px; -fx-text-fill: black;");
-
-        Label rotor1Heading = new Label("Rotor 1");
-        rotor1Heading.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        rotor1Heading.setLayoutX(rotorMenuOffset);
-        rotor1Heading.setLayoutY(rotorMenuY - 40);
-        group.getChildren().add(rotor1Heading);
-
-        Label rotor2Heading = new Label("Rotor 2");
-        rotor2Heading.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        rotor2Heading.setLayoutX(rotorMenuOffset + rotorMenuPadding);
-        rotor2Heading.setLayoutY(rotorMenuY - 40);
-        group.getChildren().add(rotor2Heading);
-
-        Label rotor3Heading = new Label("Rotor 3");
-        rotor3Heading.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        rotor3Heading.setLayoutX(rotorMenuOffset + (2 * rotorMenuPadding));
-        rotor3Heading.setLayoutY(rotorMenuY - 40);
-        group.getChildren().add(rotor3Heading);
+        // Rotors
+        rotors = new Rotors(group, enigma);
+        rotors.drawRotors();
 
         ChoiceBox<String> rotor1Position = new ChoiceBox<>();
         ChoiceBox<String> rotor2Position = new ChoiceBox<>();
@@ -223,8 +116,6 @@ public class Main extends Application {
 
         // create a popup
         Popup popup = new Popup();
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setContentText("Cannot Use Two Of the Same Rotors!");
 
         // create a label
         Label label = new Label("Cannot Use Two Of the Same Rotors!");
@@ -238,29 +129,6 @@ public class Main extends Application {
         // set size of label
         label.setMinWidth(80);
         label.setMinHeight(50);
-
-
-        rotor1.setOnAction(event -> {
-            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
-            if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
-                a.show();
-                rotor1.setValue("I");
-            }
-        });
-        rotor2.setOnAction(event -> {
-            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
-            if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
-                a.show();
-                rotor2.setValue("I");
-            }
-        });
-        rotor3.setOnAction(event -> {
-            enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
-            if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
-                a.show();
-                rotor3.setValue("I");
-            }
-        });
 
 
         Scene scene = new Scene(group, width, height, Color.DARKSLATEGRAY);
@@ -283,14 +151,14 @@ public class Main extends Application {
                     char newLetter = enigma.encrypt(letters[letterIndex]);
                     letterIndex = letterOrder.indexOf(String.valueOf(newLetter).toUpperCase());
                     pressedIndex.set(letterIndex);
-                    circles[letterIndex].setFill(Color.YELLOW);
+                    keyboard.getCircles()[letterIndex].setFill(Color.YELLOW);
                 }
             }
         });
 
         scene.setOnKeyReleased(event -> {
             if (pressedIndex.get() != -1) {
-                circles[pressedIndex.get()].setFill(Color.LIGHTSLATEGRAY);
+                keyboard.getCircles()[pressedIndex.get()].setFill(Color.LIGHTSLATEGRAY);
                 isExecuted[0] = false;
             }
         });
@@ -493,8 +361,8 @@ public class Main extends Application {
             plugs[i].setStroke(Color.BLACK);
             plugboardGroup.getChildren().add(plugs[i]);
 
-            letterText[i] = new Text(plugs[i].getCenterX() - 5, plugs[i].getCenterY() + 5, String.valueOf(letters[i]));
-            plugboardGroup.getChildren().add(letterText[i]);
+            keyboard.getLetterText()[i] = new Text(plugs[i].getCenterX() - 5, plugs[i].getCenterY() + 5, String.valueOf(letters[i]));
+            plugboardGroup.getChildren().add(keyboard.getLetterText()[i]);
             plugThings.add(plugs[i]);
 
             lastXthing = xThing + lastXthing;
@@ -508,8 +376,8 @@ public class Main extends Application {
             plugs[i].setStroke(Color.BLACK);
             plugboardGroup.getChildren().add(plugs[i]);
 
-            letterText[i] = new Text(plugs[i].getCenterX() - 5, plugs[i].getCenterY() + 5, String.valueOf(letters[i]));
-            plugboardGroup.getChildren().add(letterText[i]);
+            keyboard.getLetterText()[i] = new Text(plugs[i].getCenterX() - 5, plugs[i].getCenterY() + 5, String.valueOf(letters[i]));
+            plugboardGroup.getChildren().add(keyboard.getLetterText()[i]);
             plugThings.add(plugs[i]);
 
             lastXthing = xThing + lastXthing;
@@ -524,8 +392,8 @@ public class Main extends Application {
             plugboardGroup.getChildren().add((plugs[i]));
             plugThings.add(plugs[i]);
 
-            letterText[i] = new Text(plugs[i].getCenterX() - 5, plugs[i].getCenterY() + 5, String.valueOf(letters[i]));
-            plugboardGroup.getChildren().add(letterText[i]);
+            keyboard.getLetterText()[i] = new Text(plugs[i].getCenterX() - 5, plugs[i].getCenterY() + 5, String.valueOf(letters[i]));
+            plugboardGroup.getChildren().add(keyboard.getLetterText()[i]);
 
             lastXthing = xThing + lastXthing;
         }

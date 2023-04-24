@@ -1,4 +1,4 @@
-package com.enigma.enigma.Simulator; 
+package com.enigma.enigma.Simulator.Enigma;
 
 public class Reflector {
     protected int[] forwardWiring;
