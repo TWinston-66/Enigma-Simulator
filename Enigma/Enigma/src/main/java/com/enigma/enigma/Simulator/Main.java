@@ -17,9 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main extends Application {
@@ -42,6 +40,8 @@ public class Main extends Application {
 
     // Plugboard button parameters
     double plugButtonFontSize = 17;
+
+    Alert moreThanOneSnappedPlug;
 
 
     Plug[] plugSnaps = new Plug[10];
@@ -302,6 +302,9 @@ public class Main extends Application {
 
         Alert notEnoughPlugsUsed = new Alert(Alert.AlertType.ERROR);
         notEnoughPlugsUsed.setContentText("Please Use All 5 Plugs!");
+
+        moreThanOneSnappedPlug = new Alert(Alert.AlertType.ERROR);
+        moreThanOneSnappedPlug.setContentText("Only One Connection Per Plug!");
 
 
         //AD FT WH JO PN
@@ -588,8 +591,16 @@ public class Main extends Application {
             int circleSnapped = snapToCircles(rect, circles);
             char letter = letters[circleSnapped];
             plugSnaps[rectIndex].setDockedLetter(String.valueOf(letter));
+            StringBuilder connectedLetters = new StringBuilder();
 
-            //System.out.println("Rectangle: " + rectIndex + " snapped to " + letter);
+            for (Plug plugSnap : plugSnaps) {
+                connectedLetters.append(plugSnap.getDockedLetter());
+            }
+
+            if (hasRepeatedChars(connectedLetters.toString())) {
+                moreThanOneSnappedPlug.show();
+            }
+
             text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
             text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
             text.setText(String.valueOf(letter));
@@ -669,5 +680,26 @@ public class Main extends Application {
 
         group.getChildren().addAll(line, arrow1, arrow2);
     }
+
+    public static boolean hasRepeatedChars(String s) {
+        // Create a HashSet to store the characters in the string
+        Set<Character> set = new HashSet<>();
+
+        // Iterate over the characters in the string
+        for (char c : s.toCharArray()) {
+            // If the character is already in the HashSet, return true
+            if (set.contains(c)) {
+                return true;
+            }
+            // Otherwise, add the character to the HashSet
+            else {
+                set.add(c);
+            }
+        }
+
+        // If we reach this point, there are no repeated characters in the string
+        return false;
+    }
+
 
 }
