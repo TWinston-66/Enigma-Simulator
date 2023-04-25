@@ -2,16 +2,13 @@ package com.enigma.enigma.Simulator.UI.Controllers;
 
 import com.enigma.enigma.Simulator.Enigma.Enigma;
 import com.enigma.enigma.Simulator.UI.Keyboard;
+import com.enigma.enigma.Simulator.Util.Letters;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class KeyboardController {
-
-    private String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
-    private String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private char[] letters = letterOrder.toCharArray();
 
     public KeyboardController() {
     }
@@ -28,10 +25,10 @@ public class KeyboardController {
                 isExecuted[0] = true;
 
                 String key = event.getText();
-                int letterIndex = letterOrder.indexOf(key.toUpperCase());
+                int letterIndex = Letters.letterOrder.indexOf(key.toUpperCase());
                 if (letterIndex != -1) {
-                    char newLetter = enigma.encrypt(letters[letterIndex]);
-                    letterIndex = letterOrder.indexOf(String.valueOf(newLetter).toUpperCase());
+                    char newLetter = enigma.encrypt(Letters.letters[letterIndex]);
+                    letterIndex = Letters.letterOrder.indexOf(String.valueOf(newLetter).toUpperCase());
                     pressedIndex.set(letterIndex);
                     keyboard.getCircles()[letterIndex].setFill(Color.YELLOW);
                 }

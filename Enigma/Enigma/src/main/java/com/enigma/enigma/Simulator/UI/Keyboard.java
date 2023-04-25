@@ -1,7 +1,8 @@
 package com.enigma.enigma.Simulator.UI;
 
-import com.enigma.enigma.Simulator.UI.Controllers.KeyboardController;
 import com.enigma.enigma.Simulator.Enigma.Enigma;
+import com.enigma.enigma.Simulator.UI.Controllers.KeyboardController;
+import com.enigma.enigma.Simulator.Util.Letters;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -25,9 +26,6 @@ public class Keyboard {
 
     private KeyboardController controller;
 
-    // Letters
-    String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
-    char[] letters = letterOrder.toCharArray();
 
     List<Circle> plugThings = new ArrayList<>();
 
@@ -50,7 +48,7 @@ public class Keyboard {
             circles[i].setStroke(Color.BLACK);
             group.getChildren().add(circles[i]);
 
-            letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(letters[i]));
+            letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(Letters.letters[i]));
             group.getChildren().add(letterText[i]);
             plugThings.add(circles[i]);
 
@@ -65,7 +63,7 @@ public class Keyboard {
             circles[i].setStroke(Color.BLACK);
             group.getChildren().add(circles[i]);
 
-            letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(letters[i]));
+            letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(Letters.letters[i]));
             group.getChildren().add(letterText[i]);
             plugThings.add(circles[i]);
 
@@ -80,7 +78,7 @@ public class Keyboard {
             circles[i].setStroke(Color.BLACK);
             group.getChildren().add((circles[i]));
 
-            letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(letters[i]));
+            letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(Letters.letters[i]));
             group.getChildren().add(letterText[i]);
             plugThings.add(circles[i]);
 

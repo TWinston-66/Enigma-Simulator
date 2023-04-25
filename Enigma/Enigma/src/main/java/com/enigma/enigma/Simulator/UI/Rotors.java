@@ -1,6 +1,7 @@
 package com.enigma.enigma.Simulator.UI;
 
 import com.enigma.enigma.Simulator.Enigma.Enigma;
+import com.enigma.enigma.Simulator.Util.Letters;
 import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
@@ -26,9 +27,6 @@ public class Rotors {
     double rotorMenuOffset = 75;
     double rotorMenuFontSize = 17;
 
-    String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
-    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    char[] letters = letterOrder.toCharArray();
 
     // Alerts
     private final Alert a = new Alert(Alert.AlertType.ERROR);
@@ -147,14 +145,14 @@ public class Rotors {
         rotor1Position.setLayoutX(80);
         rotor1Position.setLayoutY(200);
 
-        for (char letter:letters) {
+        for (char letter: Letters.letters) {
             rotor1Position.getItems().add(String.valueOf(letter));
         }
 
         rotor1Position.setOnAction((event) -> {
             Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
 
-            rotorPositions[0] = alphabet.indexOf(selectedItem.toString());
+            rotorPositions[0] = Letters.alphabet.indexOf(selectedItem.toString());
 
             enigma.setRotorPositions(rotorPositions);
         });
@@ -164,14 +162,14 @@ public class Rotors {
         rotor2Position.setLayoutX(380);
         rotor2Position.setLayoutY(200);
 
-        for (char letter:letters) {
+        for (char letter:Letters.letters) {
             rotor2Position.getItems().add(String.valueOf(letter));
         }
 
         rotor2Position.setOnAction((event) -> {
             Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
 
-            rotorPositions[1] = alphabet.indexOf(selectedItem.toString());
+            rotorPositions[1] = Letters.alphabet.indexOf(selectedItem.toString());
 
             enigma.setRotorPositions(rotorPositions);
         });
@@ -181,14 +179,14 @@ public class Rotors {
         rotor3Position.setLayoutX(680);
         rotor3Position.setLayoutY(200);
 
-        for (char letter:letters) {
+        for (char letter:Letters.letters) {
             rotor3Position.getItems().add(String.valueOf(letter));
         }
 
         rotor3Position.setOnAction((event) -> {
             Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
 
-            rotorPositions[2] = alphabet.indexOf(selectedItem.toString());
+            rotorPositions[2] = Letters.alphabet.indexOf(selectedItem.toString());
 
             enigma.setRotorPositions(rotorPositions);
         });

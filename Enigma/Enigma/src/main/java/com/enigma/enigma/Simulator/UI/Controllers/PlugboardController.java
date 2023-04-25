@@ -1,6 +1,7 @@
 package com.enigma.enigma.Simulator.UI.Controllers;
 
 import com.enigma.enigma.Simulator.Enigma.Plug;
+import com.enigma.enigma.Simulator.Util.Letters;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.paint.Color;
@@ -16,10 +17,7 @@ import java.util.Set;
 
 public class PlugboardController {
 
-    private String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
-    private char[] letters = letterOrder.toCharArray();
-
-    Alert moreThanOneSnappedPlug;
+    private final Alert moreThanOneSnappedPlug;
 
     public PlugboardController() {
         moreThanOneSnappedPlug = new Alert(Alert.AlertType.ERROR);
@@ -53,7 +51,7 @@ public class PlugboardController {
 
             // Letter Snapped Index + Save Docked Letter to Plug
             int circleSnapped = snapToCircles(rect, circles);
-            char letter = letters[circleSnapped];
+            char letter = Letters.letters[circleSnapped];
             plugSnaps[rectIndex].setDockedLetter(String.valueOf(letter));
             StringBuilder connectedLetters = new StringBuilder();
 
