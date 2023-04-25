@@ -1,6 +1,9 @@
 package com.enigma.enigma.Simulator.UI;
 
+import com.enigma.enigma.Simulator.UI.Controllers.KeyboardController;
+import com.enigma.enigma.Simulator.Enigma.Enigma;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -17,6 +20,8 @@ public class Keyboard {
 
     private Group group;
 
+    private KeyboardController controller;
+
     // Letters
     String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
     char[] letters = letterOrder.toCharArray();
@@ -25,6 +30,8 @@ public class Keyboard {
         this.keyPadding = keyPadding;
         this.keyRadius = keyRadius;
         this.group = group;
+
+        controller = new KeyboardController();
     }
 
     public void drawKeyboard() {
@@ -78,5 +85,9 @@ public class Keyboard {
 
     public Text[] getLetterText() {
         return this.letterText;
+    }
+
+    public void initKeyboard(Enigma enigma, Keyboard keyboard, Scene scene) {
+        controller.initKeyboard(enigma, keyboard, scene);
     }
 }

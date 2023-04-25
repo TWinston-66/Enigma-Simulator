@@ -4,6 +4,7 @@ import com.enigma.enigma.Simulator.Enigma.Enigma;
 import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 
@@ -23,6 +24,10 @@ public class Rotors {
     double rotorMenuOffset = 75;
     double rotorMenuFontSize = 17;
 
+    String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
+    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    char[] letters = letterOrder.toCharArray();
+
     // Alerts
     private final Alert a = new Alert(Alert.AlertType.ERROR);
 
@@ -36,6 +41,7 @@ public class Rotors {
     public void drawRotors() {
         createLabels();
         createRotors();
+        createRotorChoices();
     }
 
     private void createRotors() {
@@ -126,5 +132,63 @@ public class Rotors {
         rotor3Heading.setLayoutX(rotorMenuOffset + (2 * rotorMenuPadding));
         rotor3Heading.setLayoutY(rotorMenuY - 40);
         group.getChildren().add(rotor3Heading);
+    }
+
+    private void createRotorChoices() {
+
+        ChoiceBox<String> rotor1Position = new ChoiceBox<>();
+        ChoiceBox<String> rotor2Position = new ChoiceBox<>();
+        ChoiceBox<String> rotor3Position = new ChoiceBox<>();
+        int[] rotorPositions = {0, 0, 0};
+        rotor1Position.setLayoutX(80);
+        rotor1Position.setLayoutY(200);
+
+        for (char letter:letters) {
+            rotor1Position.getItems().add(String.valueOf(letter));
+        }
+
+        rotor1Position.setOnAction((event) -> {
+            Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
+
+            rotorPositions[0] = alphabet.indexOf(selectedItem.toString());
+
+            enigma.setRotorPositions(rotorPositions);
+        });
+
+        group.getChildren().add(rotor1Position);
+
+        rotor2Position.setLayoutX(380);
+        rotor2Position.setLayoutY(200);
+
+        for (char letter:letters) {
+            rotor2Position.getItems().add(String.valueOf(letter));
+        }
+
+        rotor2Position.setOnAction((event) -> {
+            Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
+
+            rotorPositions[1] = alphabet.indexOf(selectedItem.toString());
+
+            enigma.setRotorPositions(rotorPositions);
+        });
+
+        group.getChildren().add(rotor2Position);
+
+        rotor3Position.setLayoutX(680);
+        rotor3Position.setLayoutY(200);
+
+        for (char letter:letters) {
+            rotor3Position.getItems().add(String.valueOf(letter));
+        }
+
+        rotor3Position.setOnAction((event) -> {
+            Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
+
+            rotorPositions[2] = alphabet.indexOf(selectedItem.toString());
+
+            enigma.setRotorPositions(rotorPositions);
+        });
+
+        group.getChildren().add(rotor3Position);
     }
 }

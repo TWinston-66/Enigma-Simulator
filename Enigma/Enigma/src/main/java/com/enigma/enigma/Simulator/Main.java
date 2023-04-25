@@ -2,13 +2,14 @@ package com.enigma.enigma.Simulator;
 
 import com.enigma.enigma.Simulator.Enigma.Enigma;
 import com.enigma.enigma.Simulator.Enigma.Plug;
-import com.enigma.enigma.Simulator.UI.*;
+import com.enigma.enigma.Simulator.UI.HelpScreen;
+import com.enigma.enigma.Simulator.UI.Keyboard;
+import com.enigma.enigma.Simulator.UI.Rotors;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -16,18 +17,15 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main extends Application {
     String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
-    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char[] letters = letterOrder.toCharArray();
 
     // Window Parameters
@@ -46,152 +44,35 @@ public class Main extends Application {
     Keyboard keyboard;
     Rotors rotors;
 
+    HelpScreen helpScreen;
+
     @Override
     public void start(Stage stage) {
-        // Object Group
+
+        // Group and Scene Objects
         Group group = new Group();
-
-        // Keyboard
-        keyboard = new Keyboard(50, 25, group);
-        keyboard.drawKeyboard();
-
-        // Rotors
-        rotors = new Rotors(group, enigma);
-        rotors.drawRotors();
-
-        ChoiceBox<String> rotor1Position = new ChoiceBox<>();
-        ChoiceBox<String> rotor2Position = new ChoiceBox<>();
-        ChoiceBox<String> rotor3Position = new ChoiceBox<>();
-        int[] rotorPositions = {0, 0, 0};
-        rotor1Position.setLayoutX(80);
-        rotor1Position.setLayoutY(200);
-
-        for (char letter:letters) {
-            rotor1Position.getItems().add(String.valueOf(letter));
-        }
-
-        rotor1Position.setOnAction((event) -> {
-            Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
-
-            rotorPositions[0] = alphabet.indexOf(selectedItem.toString());
-
-            enigma.setRotorPositions(rotorPositions);
-        });
-
-        group.getChildren().add(rotor1Position);
-
-        rotor2Position.setLayoutX(380);
-        rotor2Position.setLayoutY(200);
-
-        for (char letter:letters) {
-            rotor2Position.getItems().add(String.valueOf(letter));
-        }
-
-        rotor2Position.setOnAction((event) -> {
-            Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
-
-            rotorPositions[1] = alphabet.indexOf(selectedItem.toString());
-
-            enigma.setRotorPositions(rotorPositions);
-        });
-
-        group.getChildren().add(rotor2Position);
-
-        rotor3Position.setLayoutX(680);
-        rotor3Position.setLayoutY(200);
-
-        for (char letter:letters) {
-            rotor3Position.getItems().add(String.valueOf(letter));
-        }
-
-        rotor3Position.setOnAction((event) -> {
-            Object selectedItem = rotor1Position.getSelectionModel().getSelectedItem();
-
-            rotorPositions[2] = alphabet.indexOf(selectedItem.toString());
-
-            enigma.setRotorPositions(rotorPositions);
-        });
-
-        group.getChildren().add(rotor3Position);
-
-        // create a popup
-        Popup popup = new Popup();
-
-        // create a label
-        Label label = new Label("Cannot Use Two Of the Same Rotors!");
-
-        // set background
-        label.setStyle("-fx-background-color: white;");
-
-        // add the label
-        popup.getContent().add(label);
-
-        // set size of label
-        label.setMinWidth(80);
-        label.setMinHeight(50);
-
 
         Scene scene = new Scene(group, width, height, Color.DARKSLATEGRAY);
         scene.setFill(Color.GRAY);
 
+        // Main Keyboard
+        keyboard = new Keyboard(50, 25, group);
+        keyboard.drawKeyboard(); // Draw Keyboard
+        keyboard.initKeyboard(enigma, keyboard, scene); // Backend key-mapping and color "animation"
 
-        final boolean[] isExecuted = {false};
+        // Rotors + Rotor Selector + Rotor Position UI
+        rotors = new Rotors(group, enigma);
+        rotors.drawRotors();
 
-        AtomicInteger pressedIndex = new AtomicInteger();
-
-        scene.setOnKeyPressed(event -> {
-            // check if the flag is false
-            if (!isExecuted[0]) {
-                // set the flag to true
-                isExecuted[0] = true;
-
-                String key = event.getText();
-                int letterIndex = letterOrder.indexOf(key.toUpperCase());
-                if (letterIndex != -1) {
-                    char newLetter = enigma.encrypt(letters[letterIndex]);
-                    letterIndex = letterOrder.indexOf(String.valueOf(newLetter).toUpperCase());
-                    pressedIndex.set(letterIndex);
-                    keyboard.getCircles()[letterIndex].setFill(Color.YELLOW);
-                }
-            }
-        });
-
-        scene.setOnKeyReleased(event -> {
-            if (pressedIndex.get() != -1) {
-                keyboard.getCircles()[pressedIndex.get()].setFill(Color.LIGHTSLATEGRAY);
-                isExecuted[0] = false;
-            }
-        });
-
-
+        // Help Screen
         Group helpGroup = new Group();
         Scene helpScene = new Scene(helpGroup, width, height, Color.DARKSLATEGRAY);
         helpScene.setFill(Color.GRAY);
 
-        Button help = new Button("Help");
-        help.setLayoutX(50);
-        help.setLayoutY(25);
-        group.getChildren().add(help);
-        help.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
-                "-fx-border-color: black; -fx-border-width: 2;");
-        help.setOnAction(event -> {
-            stage.setScene(helpScene);
-            stage.setTitle("Enigma Simulator");
-            stage.show();
-        });
+        helpScreen = new HelpScreen();
+        helpScreen.drawHelpScreen(helpGroup, stage, helpScene);
 
-        Button helpBack = new Button("Back");
-        helpBack.setLayoutX(50);
-        helpBack.setLayoutY(25);
-        helpGroup.getChildren().add(helpBack);
-        helpBack.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
-                "-fx-border-color: black; -fx-border-width: 2;");
-        helpBack.setOnAction(event -> {
-            stage.setScene(scene);
-            stage.setTitle("Enigma Simulator");
-            stage.show();
-        });
-
+        // Plug Board Screen
         Group plugboardGroup = new Group();
         Scene plugboard = new Scene(plugboardGroup, width, height, Color.DARKSLATEGRAY);
         plugboard.setFill(Color.GRAY);
