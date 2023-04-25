@@ -8,6 +8,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Keyboard {
 
     private Circle[] circles = new Circle[26];
@@ -25,6 +28,8 @@ public class Keyboard {
     // Letters
     String letterOrder = "QWERTYUIOPASDFGHJKLZXCVBNM";
     char[] letters = letterOrder.toCharArray();
+
+    List<Circle> plugThings = new ArrayList<>();
 
     public Keyboard(double keyPadding, double keyRadius, Group group) {
         this.keyPadding = keyPadding;
@@ -46,6 +51,7 @@ public class Keyboard {
 
             letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(letters[i]));
             group.getChildren().add(letterText[i]);
+            plugThings.add(circles[i]);
 
             lastX = x + lastX;
         }
@@ -60,6 +66,7 @@ public class Keyboard {
 
             letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(letters[i]));
             group.getChildren().add(letterText[i]);
+            plugThings.add(circles[i]);
 
             lastX = x + lastX;
         }
@@ -74,6 +81,7 @@ public class Keyboard {
 
             letterText[i] = new Text(circles[i].getCenterX() - 5, circles[i].getCenterY() + 5, String.valueOf(letters[i]));
             group.getChildren().add(letterText[i]);
+            plugThings.add(circles[i]);
 
             lastX = x + lastX;
         }
@@ -89,5 +97,9 @@ public class Keyboard {
 
     public void initKeyboard(Enigma enigma, Keyboard keyboard, Scene scene) {
         controller.initKeyboard(enigma, keyboard, scene);
+    }
+
+    public List<Circle> getPlugThings() {
+        return plugThings;
     }
 }
