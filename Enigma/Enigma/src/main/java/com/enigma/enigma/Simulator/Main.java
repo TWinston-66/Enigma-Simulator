@@ -40,12 +40,10 @@ public class Main extends Application {
 
         // Main Keyboard
         keyboard = new Keyboard(50, 25, group);
-        keyboard.drawKeyboard(); // Draw Keyboard
-        keyboard.initKeyboard(enigma, keyboard, scene); // Backend key-mapping and color "animation"
+        keyboard.initKeyboard(enigma, keyboard, scene);
 
         // Rotors + Rotor Selector + Rotor Position UI
         rotors = new Rotors(group, enigma);
-        rotors.drawRotors();
 
         // Help Screen
         Group helpGroup = new Group();
@@ -53,20 +51,17 @@ public class Main extends Application {
         helpScene.setFill(Color.GRAY);
 
         helpScreen = new HelpScreen();
-        helpScreen.drawHelpScreen(helpGroup, stage, helpScene);
+        helpScreen.drawHelpScreen(group, stage, helpScene, helpGroup, scene);
 
         // Plug Board Screen
         Group plugboardGroup = new Group();
         Scene plugboard = new Scene(plugboardGroup, width, height, Color.DARKSLATEGRAY);
         plugboard.setFill(Color.GRAY);
 
-        plugboardScreen = new PlugboardScreen(enigma, plugSnaps);
-        plugboardScreen.drawPlugboardScreen(group, stage, plugboard, scene, plugboardGroup, keyboard.getPlugThings(), plugSnaps);
+        plugboardScreen = new PlugboardScreen(enigma, plugSnaps, group, stage, plugboard, scene, plugboardGroup, keyboard.getPlugThings());
 
         // Plugboard plugs
         plugboardKeyboard = new Keyboard(60, 15, plugboardGroup);
-        plugboardKeyboard.drawKeyboard();
-
 
         // Create the scene and set it on the primary stage
         stage.setScene(scene);
@@ -74,9 +69,9 @@ public class Main extends Application {
         stage.show();
     }
 
+    // Run Method
     public static void main(String[] args) {
         launch();
     }
-
 
 }

@@ -14,6 +14,8 @@ public class Rotors {
 
     private ComboBox<String> rotor1, rotor2, rotor3;
     private Label rotor1Heading, rotor2Heading, rotor3Heading;
+
+    private ChoiceBox<String> rotor1Position, rotor2Position, rotor3Position;
     private Group group;
 
     private Enigma enigma;
@@ -36,9 +38,10 @@ public class Rotors {
         this.group = group;
 
         a.setContentText("Cannot Use Two Of the Same Rotors!");
+        drawRotors();
     }
 
-    public void drawRotors() {
+    private void drawRotors() {
         createLabels();
         createRotors();
         createRotorChoices();
@@ -98,14 +101,14 @@ public class Rotors {
             enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
             if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
                 a.show();
-                rotor2.setValue("I");
+                rotor2.setValue("II");
             }
         });
         rotor3.setOnAction(event -> {
             enigma.setRotors(new String[] { rotor1.getValue(),  rotor2.getValue(),  rotor3.getValue()});
             if (Objects.equals(rotor1.getValue(), rotor2.getValue()) || Objects.equals(rotor2.getValue(), rotor3.getValue()) || Objects.equals(rotor1.getValue(), rotor3.getValue())) {
                 a.show();
-                rotor3.setValue("I");
+                rotor3.setValue("III");
             }
         });
 
@@ -136,9 +139,10 @@ public class Rotors {
 
     private void createRotorChoices() {
 
-        ChoiceBox<String> rotor1Position = new ChoiceBox<>();
-        ChoiceBox<String> rotor2Position = new ChoiceBox<>();
-        ChoiceBox<String> rotor3Position = new ChoiceBox<>();
+        rotor1Position = new ChoiceBox<>();
+        rotor2Position = new ChoiceBox<>();
+        rotor3Position = new ChoiceBox<>();
+
         int[] rotorPositions = {0, 0, 0};
         rotor1Position.setLayoutX(80);
         rotor1Position.setLayoutY(200);

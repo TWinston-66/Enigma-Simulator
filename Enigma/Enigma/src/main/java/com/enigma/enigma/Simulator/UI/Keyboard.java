@@ -37,9 +37,10 @@ public class Keyboard {
         this.group = group;
 
         controller = new KeyboardController();
+        drawKeyboard();
     }
 
-    public void drawKeyboard() {
+    private void drawKeyboard() {
 
         // First Keyboard Row (q -> p)
         for (int i = 0; i < 10; i++) {

@@ -17,16 +17,16 @@ public class HelpScreen {
         helpBack = new Button("Back");
     }
 
-    public void drawHelpScreen(Group group, Stage stage, Scene scene) {
+    public void drawHelpScreen(Group mainGroup, Stage stage, Scene helpScene, Group helpGroup, Scene scene) {
 
         // Main Screen to Help Screen Button
         help.setLayoutX(50);
         help.setLayoutY(25);
-        group.getChildren().add(help);
+        mainGroup.getChildren().add(help);
         help.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
                 "-fx-border-color: black; -fx-border-width: 2;");
         help.setOnAction(event -> {
-            stage.setScene(scene);
+            stage.setScene(helpScene);
             stage.setTitle("Enigma Simulator");
             stage.show();
         });
@@ -34,7 +34,7 @@ public class HelpScreen {
         // Help Screen to Main Screen Button
         helpBack.setLayoutX(50);
         helpBack.setLayoutY(25);
-        group.getChildren().add(helpBack);
+        helpGroup.getChildren().add(helpBack);
         helpBack.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
                 "-fx-border-color: black; -fx-border-width: 2;");
         helpBack.setOnAction(event -> {

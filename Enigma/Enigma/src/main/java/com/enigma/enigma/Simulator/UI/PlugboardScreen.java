@@ -41,7 +41,7 @@ public class PlugboardScreen {
 
     private Plug[] plugSnaps;
 
-    public PlugboardScreen(Enigma enigma, Plug[] plugSnaps) {
+    public PlugboardScreen(Enigma enigma, Plug[] plugSnaps, Group group, Stage stage, Scene plugboardScene, Scene scene, Group plugboardGroup, List<Circle> circle) {
         button = new Button("Plugboard");
         back = new Button("Back");
         save = new Button("Save");
@@ -52,9 +52,11 @@ public class PlugboardScreen {
 
         this.enigma = enigma;
         this.plugSnaps = plugSnaps;
+
+        drawPlugboardScreen(group, stage, plugboardScene, scene, plugboardGroup, circle, plugSnaps);
     }
 
-    public void drawPlugboardScreen(Group group, Stage stage, Scene plugboardScene, Scene scene, Group plugboardGroup, List<Circle> circles, Plug[] plugSnaps) {
+    private void drawPlugboardScreen(Group group, Stage stage, Scene plugboardScene, Scene scene, Group plugboardGroup, List<Circle> circles, Plug[] plugSnaps) {
         drawButtons(group, stage, plugboardScene, scene, plugboardGroup);
         drawLabels(plugboardGroup);
         drawPlugs(plugboardGroup, circles, plugSnaps);
@@ -77,7 +79,7 @@ public class PlugboardScreen {
         // Plug board screen to main screen button
         back.setLayoutX(700);
         back.setLayoutY(25);
-        group.getChildren().add(back);
+        plugboardGroup.getChildren().add(back);
         back.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
                 "-fx-border-color: black; -fx-border-width: 2;");
         back.setOnAction(event -> {
@@ -202,7 +204,7 @@ public class PlugboardScreen {
 
         // Plugs
         Rectangle[] plugEnds = new Rectangle[10];
-        double rectangleSize = 40;
+        double rectangleSize = 45;
         double plugWirePadding = 50;
         double y;
         double oldY = 0;

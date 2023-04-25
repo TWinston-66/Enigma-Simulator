@@ -67,7 +67,7 @@ public class PlugboardController {
 
             text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
             text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
-            text.setText(String.valueOf(letter));
+            //text.setText(String.valueOf(letter));
 
         });
     }
@@ -100,7 +100,6 @@ public class PlugboardController {
 
         return closestCircleIndex;
     }
-
 
     private void unsnapFromCircles(Rectangle rect, List<Circle> circles) {
         for (Circle circle : circles) {
