@@ -4,12 +4,9 @@ import com.enigma.enigma.Simulator.Enigma.Plug;
 import com.enigma.enigma.Simulator.Util.Letters;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 import java.util.HashSet;
 import java.util.List;
@@ -27,19 +24,19 @@ public class PlugboardController {
     public void addDraggable(Rectangle rect, List<Circle> circles, int rectIndex, Group root, Plug[] plugSnaps) {
 
         // Set Rectangle to Docked Letter
-        Text text = new Text();
+        /*Text text = new Text();
         text.setFont(Font.font("Arial", 16)); // Set font size and type
         text.setFill(Color.BLACK); // Set font color
         text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
         text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
-        root.getChildren().add(text); // Add text to the same group as the rectangle
+        root.getChildren().add(text); // Add text to the same group as the rectangle*/
 
         rect.setOnMousePressed(event -> {
             rect.setUserData(new double[]{event.getSceneX(), event.getSceneY()});
             unsnapFromCircles(rect, circles);
-            text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
-            text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
-            text.setText("");
+            //text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
+            //text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
+            //text.setText("");
         });
         rect.setOnMouseDragged(event -> {
             double[] userData = (double[]) rect.getUserData();
@@ -63,8 +60,8 @@ public class PlugboardController {
                 moreThanOneSnappedPlug.show();
             }
 
-            text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
-            text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
+            //text.setX(((rect.getX() + rect.getWidth() / 2) + 5 ) - ((text.getLayoutBounds().getWidth() / 2)) + 5);
+            //text.setY(((rect.getY() + rect.getHeight() / 2) + 5 ) - ((text.getLayoutBounds().getHeight() / 2)) + 5);
             //text.setText(String.valueOf(letter));
 
         });

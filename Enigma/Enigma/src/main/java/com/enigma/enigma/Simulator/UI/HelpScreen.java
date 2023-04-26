@@ -22,7 +22,7 @@ public class HelpScreen {
         // Main Screen to Help Screen Button
         help.setLayoutX(50);
         help.setLayoutY(25);
-        mainGroup.getChildren().add(help);
+        //mainGroup.getChildren().add(help);
         help.setStyle("-fx-background-color: gray; -fx-font-size: " + plugButtonFontSize + "px; -fx-text-fill: black; " +
                 "-fx-border-color: black; -fx-border-width: 2;");
         help.setOnAction(event -> {

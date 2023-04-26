@@ -20,7 +20,6 @@ public class Main extends Application {
 
     Plug[] plugSnaps = new Plug[10];
     Enigma enigma = new Enigma(new String[] {"VII", "V", "IV"}, "B", new int[] {10,5,12}, new int[] {1,2,3}, "AD FT WH JO PN");
-
     Keyboard keyboard;
     Keyboard plugboardKeyboard;
     Rotors rotors;
