@@ -2,10 +2,7 @@ package com.enigma.enigma.Simulator;
 
 import com.enigma.enigma.Simulator.Enigma.Enigma;
 import com.enigma.enigma.Simulator.Enigma.Plug;
-import com.enigma.enigma.Simulator.UI.HelpScreen;
-import com.enigma.enigma.Simulator.UI.Keyboard;
-import com.enigma.enigma.Simulator.UI.PlugboardScreen;
-import com.enigma.enigma.Simulator.UI.Rotors;
+import com.enigma.enigma.Simulator.UI.*;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -27,6 +24,8 @@ public class Main extends Application {
     HelpScreen helpScreen;
 
     PlugboardScreen plugboardScreen;
+
+    TextEncoder textEncoder;
 
     @Override
     public void start(Stage stage) {
@@ -50,7 +49,7 @@ public class Main extends Application {
         helpScene.setFill(Color.GRAY);
 
         helpScreen = new HelpScreen();
-        helpScreen.drawHelpScreen(group, stage, helpScene, helpGroup, scene);
+        helpScreen.drawHelpScreen(stage, helpScene, helpGroup, scene);
 
         // Plug Board Screen
         Group plugboardGroup = new Group();
@@ -61,6 +60,12 @@ public class Main extends Application {
 
         // Plugboard plugs
         plugboardKeyboard = new Keyboard(60, 15, plugboardGroup);
+
+        // Text Encoder Screen
+        Group textEncoderGroup = new Group();
+        Scene textEncoderScene = new Scene(textEncoderGroup, width, height); //, Color.DARKSLATEGRAY);
+        //textEncoderScene.setFill(Color.GRAY);
+        textEncoder = new TextEncoder(stage, scene, textEncoderScene, group, textEncoderGroup);
 
         // Create the scene and set it on the primary stage
         stage.setScene(scene);

@@ -17,7 +17,7 @@ public class HelpScreen {
         helpBack = new Button("Back");
     }
 
-    public void drawHelpScreen(Group mainGroup, Stage stage, Scene helpScene, Group helpGroup, Scene scene) {
+    public void drawHelpScreen(Stage stage, Scene helpScene, Group helpGroup, Scene scene) {
 
         // Main Screen to Help Screen Button
         help.setLayoutX(50);
