@@ -63,8 +63,8 @@ public class Main extends Application {
 
         // Text Encoder Screen
         Group textEncoderGroup = new Group();
-        Scene textEncoderScene = new Scene(textEncoderGroup, width, height); //, Color.DARKSLATEGRAY);
-        //textEncoderScene.setFill(Color.GRAY);
+        Scene textEncoderScene = new Scene(textEncoderGroup, width, height, Color.DARKSLATEGRAY);
+        textEncoderScene.setFill(Color.GRAY);
         textEncoder = new TextEncoder(stage, scene, textEncoderScene, group, textEncoderGroup);
 
         // Create the scene and set it on the primary stage
