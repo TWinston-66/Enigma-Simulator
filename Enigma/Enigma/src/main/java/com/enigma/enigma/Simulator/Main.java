@@ -65,7 +65,7 @@ public class Main extends Application {
         Group textEncoderGroup = new Group();
         Scene textEncoderScene = new Scene(textEncoderGroup, width, height, Color.DARKSLATEGRAY);
         textEncoderScene.setFill(Color.GRAY);
-        textEncoder = new TextEncoder(stage, scene, textEncoderScene, group, textEncoderGroup);
+        textEncoder = new TextEncoder(stage, scene, textEncoderScene, group, textEncoderGroup, enigma);
 
         // Create the scene and set it on the primary stage
         stage.setScene(scene);
