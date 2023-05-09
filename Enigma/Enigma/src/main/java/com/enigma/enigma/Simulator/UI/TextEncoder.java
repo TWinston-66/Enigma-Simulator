@@ -83,20 +83,11 @@ public class TextEncoder {
                 "-fx-border-color: black; -fx-border-width: 2;");
         save.setOnAction(event -> {
 
-            char[] toEncode = textAreaLeft.getText().toUpperCase().toCharArray();
+            String toEncode = textAreaLeft.getText().toUpperCase();
+            textAreaRight.setText(enigma.encrypt(toEncode));
 
-            char[] encodedArray = new char[toEncode.length];
-
-            for (int i = 0; i < encodedArray.length; i++) {
-                encodedArray[i] = enigma.encrypt(toEncode[i]);
-            }
-
-            String encodedString = new String(encodedArray);
-
-            textAreaRight.setText(encodedString);
-
-            //System.out.println("Left Text: " + textAreaLeft.getText());
-            //System.out.println("Right Text: " + textAreaRight.getText());
+            System.out.println("Left Text: " + textAreaLeft.getText());
+            System.out.println("Right Text: " + textAreaRight.getText());
         });
     }
 

@@ -87,15 +87,32 @@ public class Enigma {
         return c7;
     }
 
+    // Encrypt Char
     public char encrypt(char c) {
         return (char)(this.encrypt(c - 65) + 65);
     }
 
-    public char[] encrypt(char[] input) {
+
+    // Encrypt Char Array
+    /*public char[] encrypt(char[] input) {
         char[] output = new char[input.length];
         for (int i = 0; i < input.length; i++) {
             output[i] = this.encrypt(input[i]);
         }
         return output;
+        return output;
+    }*/
+
+    // Encrypt String
+    public String encrypt(String toEncrypt) {
+
+        byte[] toEncryptByteArray = toEncrypt.getBytes();
+        StringBuilder newString = new StringBuilder();
+
+        for (byte b : toEncryptByteArray) {
+            newString.append(encrypt(b));
+        }
+
+        return newString.toString();
     }
 }
