@@ -93,16 +93,6 @@ public class Enigma {
     }
 
 
-    // Encrypt Char Array
-    /*public char[] encrypt(char[] input) {
-        char[] output = new char[input.length];
-        for (int i = 0; i < input.length; i++) {
-            output[i] = this.encrypt(input[i]);
-        }
-        return output;
-        return output;
-    }*/
-
     // Encrypt String
     public String encrypt(String toEncrypt) {
 
